@@ -1,0 +1,22 @@
+{
+  "name": "vanilla-store",
+  "version": "0.1.0",
+  "description": "icecreamA simple and lightweight Javascript web browser terminal",
+  "main": "index.js",
+  "repository": "https://github.com/soyjavi/vanilla-store",
+  "author": "soyjavi",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-preset-env": "1.7.0",
+    "eslint": "5.15.2",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.16.0",
+    "jest": "23.6.0"
+  },
+  "scripts": {
+    "build": "babel src -d dist --ignore '**/*.test.js'",
+    "test": "jest src",
+    "lint": "eslint src"
+  }
+}
