@@ -4,6 +4,10 @@ import path from 'path';
 import Store from './Store';
 
 const folder = path.resolve('.', 'store');
+const javi = { id: 1, name: 'javi', role: 'dev' };
+const frank = {  id: 2, name: 'frank', role: 'bof' };
+const john = { id: 3, name: 'john', role: 'dev' };
+const david = { id: 4, name: 'david', role: 'manager' };
 
 describe('Store', () => {
   beforeEach(() => {
@@ -45,6 +49,37 @@ describe('Store', () => {
     expect(store.value).toEqual([{ hola: 'mundo' }]);
   });
 
+
+  it('.findOne()', () => {
+    const store = new Store();
+
+    store.get('users');
+    store.push(javi);
+    store.push(frank);
+    store.push(john);
+    store.push(david);
+
+    expect(store.findOne({ role: 'dev' })).toEqual(javi);
+    expect(store.findOne({ name: 'john', role: 'dev' })).toEqual(john);
+    expect(store.findOne({ role: 'manager' })).toEqual(david);
+    expect(store.findOne({ id: 3, role: 'manager' })).toEqual(undefined);
+  });
+
+  it('.find()', () => {
+    const store = new Store();
+
+    store.get('users');
+    store.push(javi);
+    store.push(frank);
+    store.push(john);
+    store.push(david);
+
+    expect(store.find({ role: 'dev' })).toEqual([javi, john]);
+    expect(store.find({ name: 'john', role: 'dev' })).toEqual([john]);
+    expect(store.find({ role: 'manager' })).toEqual([david]);
+    expect(store.find({ id: 3, role: 'manager' })).toEqual(undefined);
+  });
+
   it('when {autoSave:false} && .push()', () => {
     const store = new Store({ autoSave: false });
 
@@ -71,5 +106,25 @@ describe('Store', () => {
     expect(store.get('english').value).toEqual([{ hello: 'world' }]);
 
     store.save();
+  });
+
+  it('.update()', () => {
+    const store = new Store();
+
+    store.get('users');
+    store.push(javi);
+    store.push(frank);
+    store.push(john);
+    store.push(david);
+
+    let query = { id: 2 };
+    let nextData = { name: 'frank miller', twitter: 'frankmiller' };
+    store.update(query, nextData);
+    expect(store.findOne(query)).toEqual({ ...frank, ...nextData });
+
+    query = { role: 'dev' };
+    nextData = { role: 'developer' };
+    store.update(query, nextData);
+    expect(store.find(nextData)).toEqual([{ ...javi, ...nextData }, { ...john, ...nextData }]);
   });
 });

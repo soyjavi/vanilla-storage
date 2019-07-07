@@ -24,12 +24,38 @@ export default class Store {
   }
 
   findOne(query) {
+    const { data, key } = state.get(this);
+    const queryFields = Object.keys(query);
 
+    return data[key].find((row) => {
+      let found = true;
+
+      queryFields.some((field) => {
+        found = (row[field] === query[field]);
+        return !found;
+      });
+
+      return found;
+    });
   }
 
-  find(query) {
-    const { data } = state.get(this);
+  find(query = {}) {
+    const { data, key } = state.get(this);
+    const queryFields = Object.keys(query);
+    const values = [];
 
+    data[key].forEach((row) => {
+      let found = true;
+
+      queryFields.some((field) => {
+        found = (row[field] === query[field]);
+        return !found;
+      });
+
+      if (found) values.push(row);
+    });
+
+    return values.length > 0 ? values : undefined;
   }
 
   get(key) {
@@ -64,11 +90,24 @@ export default class Store {
     }
   }
 
-  update(query, data) {
-    const { adapter, data } = state.get(this);
+  update(query, nextData) {
+    const { adapter, data, key } = state.get(this);
+    const queryFields = Object.keys(query);
+    let hasChanges = false;
 
-    const rows = this.find(query);
-    // @TODO: Iterate rows and adapter.write()
+    data[key] = data[key].map((row) => {
+      let found = true;
+
+      queryFields.some((field) => {
+        found = (row[field] === query[field]);
+        return !found;
+      });
+
+      if (found && !hasChanges) hasChanges = true;
+      return found ? { ...row, ...nextData } : row;
+    });
+
+    if (hasChanges) adapter.write(data);
   }
 
   get value() {
