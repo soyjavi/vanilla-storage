@@ -1,6 +1,6 @@
 {
   "name": "vanilla-storage",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "🍦A naive and simple driver for store data in javascript",
   "keywords": [
     "store",
@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
-    "test": "jest src",
+    "test": "yarn build && jest src",
     "lint": "eslint src"
   }
 }

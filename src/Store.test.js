@@ -19,9 +19,12 @@ describe('Store', () => {
     const store = new Store();
 
     expect(Object.keys(store)).toEqual([]);
+    expect(store.findOne).toBeDefined();
+    expect(store.find).toBeDefined();
     expect(store.get).toBeDefined();
     expect(store.push).toBeDefined();
     expect(store.save).toBeDefined();
+    expect(store.update).toBeDefined();
     expect(store.value).toEqual(undefined);
   });
 
