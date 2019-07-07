@@ -104,7 +104,8 @@ export default class Store {
       });
 
       if (found && !hasChanges) hasChanges = true;
-      return found ? { ...row, ...nextData } : row;
+      // return found ? Object.assign(row, nextData) : row;
+      return found ? Object.assign(row, nextData) : row;
     });
 
     if (hasChanges) adapter.write(data);

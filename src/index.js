@@ -87,4 +87,3 @@ export default class Store {
     write(filename);
   }
 }
-export { default } from './Store';

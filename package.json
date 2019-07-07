@@ -1,7 +1,7 @@
 {
   "name": "vanilla-storage",
-  "version": "0.1.1",
-  "description": "icecreamA simple and lightweight Javascript web browser terminal",
+  "version": "0.1.2",
+  "description": "🍦A naive and simple driver for store data in javascript",
   "main": "index.js",
   "repository": "https://github.com/soyjavi/vanilla-store",
   "author": "soyjavi",
@@ -10,13 +10,16 @@
     "babel-cli": "6.26.0",
     "babel-preset-env": "1.7.0",
     "eslint": "5.15.2",
-    "eslint-config-airbnb-base": "13.1.0",
-    "eslint-plugin-import": "2.16.0",
+    "eslint-config-airbnb-base": "13.2.0",
+    "eslint-plugin-import": "2.18.0",
     "jest": "23.6.0"
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
     "test": "jest src",
     "lint": "eslint src"
+  },
+  "dependencies": {
+    "package.json": "^2.0.1"
   }
 }
