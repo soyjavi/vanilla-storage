@@ -122,12 +122,16 @@ describe('Store', () => {
 
     let query = { id: 2 };
     let nextData = { name: 'frank miller', twitter: 'frankmiller' };
-    store.update(query, nextData);
+    let update = store.update(query, nextData);
+    expect(update.length).toEqual(1);
+    expect(update[0]).toEqual({ ...frank, ...nextData });
     expect(store.findOne(query)).toEqual({ ...frank, ...nextData });
 
     query = { role: 'dev' };
     nextData = { role: 'developer' };
-    store.update(query, nextData);
+    update = store.update(query, nextData);
+    expect(update.length).toEqual(2);
+    // expect(update).toEqual(([{ ...javi, ...nextData }, { ...john, ...nextData }]);
     expect(store.find(nextData)).toEqual([{ ...javi, ...nextData }, { ...john, ...nextData }]);
   });
 });

@@ -93,22 +93,28 @@ export default class Store {
   update(query, nextData) {
     const { adapter, data, key } = state.get(this);
     const queryFields = Object.keys(query);
-    let hasChanges = false;
+    const rowsChanged = [];
 
     data[key] = data[key].map((row) => {
       let found = true;
+      let changes;
 
       queryFields.some((field) => {
         found = (row[field] === query[field]);
         return !found;
       });
 
-      if (found && !hasChanges) hasChanges = true;
-      // return found ? Object.assign(row, nextData) : row;
-      return found ? Object.assign(row, nextData) : row;
+      if (found) {
+        changes = Object.assign(row, nextData);
+        rowsChanged.push(changes);
+      }
+
+      return changes || row;
     });
 
-    if (hasChanges) adapter.write(data);
+    if (rowsChanged.length > 0) adapter.write(data);
+
+    return rowsChanged;
   }
 
   get value() {

@@ -138,22 +138,28 @@ var Store = function () {
           key = _state$get5.key;
 
       var queryFields = Object.keys(query);
-      var hasChanges = false;
+      var rowsChanged = [];
 
       data[key] = data[key].map(function (row) {
         var found = true;
+        var changes = void 0;
 
         queryFields.some(function (field) {
           found = row[field] === query[field];
           return !found;
         });
 
-        if (found && !hasChanges) hasChanges = true;
-        // return found ? Object.assign(row, nextData) : row;
-        return found ? Object.assign(row, nextData) : row;
+        if (found) {
+          changes = Object.assign(row, nextData);
+          rowsChanged.push(changes);
+        }
+
+        return changes || row;
       });
 
-      if (hasChanges) adapter.write(data);
+      if (rowsChanged.length > 0) adapter.write(data);
+
+      return rowsChanged;
     }
   }, {
     key: 'wipe',
