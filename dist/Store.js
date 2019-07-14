@@ -106,7 +106,7 @@ var Store = function () {
 
       if (autoSave) this.save(value);else memoryPool.push({ key: key, value: value });
 
-      return this;
+      return value;
     }
   }, {
     key: 'save',
@@ -138,7 +138,7 @@ var Store = function () {
           key = _state$get5.key;
 
       var queryFields = Object.keys(query);
-      var rowsChanged = [];
+      var values = [];
 
       data[key] = data[key].map(function (row) {
         var found = true;
@@ -151,15 +151,15 @@ var Store = function () {
 
         if (found) {
           changes = Object.assign(row, nextData);
-          rowsChanged.push(changes);
+          values.push(changes);
         }
 
         return changes || row;
       });
 
-      if (rowsChanged.length > 0) adapter.write(data);
+      if (values.length > 0) adapter.write(data);
 
-      return rowsChanged;
+      return values;
     }
   }, {
     key: 'wipe',

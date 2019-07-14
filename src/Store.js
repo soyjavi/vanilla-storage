@@ -70,7 +70,7 @@ export default class Store {
     if (autoSave) this.save(value);
     else memoryPool.push({ key, value });
 
-    return this;
+    return value;
   }
 
   save(value) {
@@ -93,7 +93,7 @@ export default class Store {
   update(query, nextData) {
     const { adapter, data, key } = state.get(this);
     const queryFields = Object.keys(query);
-    const rowsChanged = [];
+    const values = [];
 
     data[key] = data[key].map((row) => {
       let found = true;
@@ -106,15 +106,15 @@ export default class Store {
 
       if (found) {
         changes = Object.assign(row, nextData);
-        rowsChanged.push(changes);
+        values.push(changes);
       }
 
       return changes || row;
     });
 
-    if (rowsChanged.length > 0) adapter.write(data);
+    if (values.length > 0) adapter.write(data);
 
-    return rowsChanged;
+    return values;
   }
 
   get value() {

@@ -41,7 +41,8 @@ describe('Store', () => {
   it('.push()', () => {
     const store = new Store();
 
-    store.push({ hello: 'world' });
+    const row = store.push({ hello: 'world' });
+    expect(row).toEqual({ hello: 'world' });
     expect(store.value).toEqual([{ hello: 'world'}]);
   });
 
