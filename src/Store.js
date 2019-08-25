@@ -1,6 +1,12 @@
-import { jsonAdapter } from './adapters';
+import { jsonAdapter, memoryAdapter, storageAdapter } from './adapters';
 
 const state = new WeakMap();
+
+export {
+  jsonAdapter,
+  memoryAdapter,
+  storageAdapter,
+};
 
 export default class Store {
   constructor(props = {}) {

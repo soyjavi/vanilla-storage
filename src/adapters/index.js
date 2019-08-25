@@ -1,5 +1,5 @@
 import jsonAdapter from './json';
-import storageAdapter from './localStorage';
+import storageAdapter from './storage';
 import memoryAdapter from './memory';
 
 export {
