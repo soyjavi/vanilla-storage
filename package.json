@@ -1,6 +1,6 @@
 {
   "name": "vanilla-storage",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "🍦A naive and simple driver for store data in javascript",
   "keywords": [
     "store",
