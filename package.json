@@ -32,5 +32,8 @@
     "build": "babel src -d dist --ignore '**/*.test.js'",
     "test": "yarn build && jest src",
     "lint": "eslint src"
+  },
+  "dependencies": {
+    "ipfs": "^0.37.1"
   }
 }
