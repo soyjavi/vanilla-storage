@@ -8,6 +8,7 @@ const javi = { id: 1, name: 'javi', role: 'dev' };
 const frank = {  id: 2, name: 'frank', role: 'bof' };
 const john = { id: 3, name: 'john', role: 'dev' };
 const david = { id: 4, name: 'david', role: 'manager' };
+const storeObject = { defaults: { users: { soyjavi: undefined } } };
 
 describe('Store', () => {
   beforeEach(() => {
@@ -33,9 +34,15 @@ describe('Store', () => {
   });
 
   it('when {defaults}', () => {
-    const store = new Store({ defaults: { coins: [1, 2, 3] } });
+    const store = new Store({ defaults: { numbers: [1, 2, 3] } });
     expect(store.value).toEqual(undefined);
-    expect(store.get('coins').value).toEqual([1, 2, 3]);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+  });
+
+  it('when {defaults:object}', () => {
+    const store = new Store(storeObject);
+    expect(store.value).toEqual(undefined);
+    expect(store.get('users').value).toEqual({ soyjavi: undefined });
   });
 
   it('.push()', () => {
@@ -46,13 +53,20 @@ describe('Store', () => {
     expect(store.value).toEqual([{ hello: 'world'}]);
   });
 
+  it('.push() {object}', () => {
+    const store = new Store(storeObject);
+
+    const row = store.get('users').push({ javi: true });
+    expect(row).toEqual({ javi: true });
+    expect(store.value).toEqual({ soyjavi: undefined, javi: true });
+  });
+
   it('.get() & .push()', () => {
     const store = new Store();
 
     store.get('spanish').push({ hola: 'mundo' });
     expect(store.value).toEqual([{ hola: 'mundo' }]);
   });
-
 
   it('.findOne()', () => {
     const store = new Store();

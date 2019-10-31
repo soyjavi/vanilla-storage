@@ -83,9 +83,11 @@ export default class Store {
     const {
       adapter, data, key, memoryPool = [],
     } = state.get(this);
+    const isArray = data[key] === undefined || Array.isArray(data[key]);
 
     if (value) {
-      data[key] = data[key] ? [...data[key], value] : [value];
+      if (isArray) data[key] = data[key] ? [...data[key], value] : [value];
+      else data[key] = Object.assign({}, data[key], value);
       adapter.write(data);
     } else if (memoryPool.length > 0) {
       memoryPool.forEach((item) => {

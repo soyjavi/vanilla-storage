@@ -123,8 +123,10 @@ var Store = function () {
           _state$get4$memoryPoo = _state$get4.memoryPool,
           memoryPool = _state$get4$memoryPoo === undefined ? [] : _state$get4$memoryPoo;
 
+      var isArray = data[key] === undefined || Array.isArray(data[key]);
+
       if (value) {
-        data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [value]) : [value];
+        if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [value]) : [value];else data[key] = Object.assign({}, data[key], value);
         adapter.write(data);
       } else if (memoryPool.length > 0) {
         memoryPool.forEach(function (item) {
