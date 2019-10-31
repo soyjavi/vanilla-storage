@@ -1,4 +1,4 @@
-const localStorage = (window && window.localStorage)
+const localStorage = (typeof window !== 'undefined' && window.localStorage)
   ? window.localStorage
   : { getItem: () => {}, setItem: () => {} };
 

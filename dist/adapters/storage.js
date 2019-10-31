@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,7 +8,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var localStorage = window && window.localStorage ? window.localStorage : { getItem: function getItem() {}, setItem: function setItem() {} };
+var localStorage = typeof window !== 'undefined' && window.localStorage ? window.localStorage : { getItem: function getItem() {}, setItem: function setItem() {} };
 
 var storageAdapter = function () {
   function storageAdapter(_ref) {
@@ -25,7 +25,7 @@ var storageAdapter = function () {
   }
 
   _createClass(storageAdapter, [{
-    key: "read",
+    key: 'read',
     value: function read() {
       var key = this.key;
 
@@ -34,13 +34,13 @@ var storageAdapter = function () {
       try {
         data = JSON.parse(localStorage.getItem(key));
       } catch (error) {
-        throw new Error(key + " could not be loaded correctly.");
+        throw new Error(key + ' could not be loaded correctly.');
       }
 
       return data;
     }
   }, {
-    key: "write",
+    key: 'write',
     value: function write() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var key = this.key;
@@ -49,7 +49,7 @@ var storageAdapter = function () {
       try {
         localStorage.setItem(this.key, JSON.stringify(data));
       } catch (error) {
-        throw new Error(key + " could not be saved correctly.");
+        throw new Error(key + ' could not be saved correctly.');
       }
     }
   }]);
