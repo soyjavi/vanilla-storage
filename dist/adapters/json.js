@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var fs = {
@@ -15,9 +17,13 @@ var path = {
   resolve: function resolve() {}
 };
 
-if (typeof module !== 'undefined') {
-  fs = require('fs'); // eslint-disable-line
-  path = require('path'); // eslint-disable-line
+try {
+  if ((typeof process === 'undefined' ? 'undefined' : _typeof(process)) === 'object') {
+    fs = require('fs'); // eslint-disable-line
+    path = require('path'); // eslint-disable-line
+  }
+} catch (error) {
+  console.log('ERROR');
 }
 
 var folder = path.resolve('.', 'store');

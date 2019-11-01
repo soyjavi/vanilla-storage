@@ -1,10 +1,19 @@
-let fs = { existsSync() {} };
-let path = { resolve() {} };
+let fs = {
+  existsSync() {},
+  mkdirSync() {},
+  readFileSync() {},
+  writeFileSync() {},
+};
+let path = {
+  resolve() {},
+};
 
-if (typeof module !== 'undefined') {
-  fs = require('fs'); // eslint-disable-line
-  path = require('path'); // eslint-disable-line
-}
+try {
+  if (typeof process === 'object') {
+    fs = require('fs'); // eslint-disable-line
+    path = require('path'); // eslint-disable-line
+  }
+} catch (error) { fs.error = error; }
 
 const folder = path.resolve('.', 'store');
 
