@@ -1,5 +1,10 @@
-import fs from 'fs';
-import path from 'path';
+let fs = { existsSync() {} };
+let path = { resolve() {} };
+
+if (typeof module !== 'undefined') {
+  fs = require('fs'); // eslint-disable-line
+  path = require('path'); // eslint-disable-line
+}
 
 const folder = path.resolve('.', 'store');
 
