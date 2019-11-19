@@ -170,7 +170,7 @@ describe('Store', () => {
 
   it('when {secret}', () => {
     const secret = 'pāşšŵōřđ';
-    const store = new Store({ filename: 'store_encript', secret });
+    const store = new Store({ filename: 'store_encript', defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
     store.get('users');
@@ -178,7 +178,12 @@ describe('Store', () => {
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 
+    store.get('obj');
+    store.save(javi);
+    expect(store.value).toEqual(javi);
+
     // -- Read
+    store.get('users');
     const query = { id: 1 };
     expect(store.findOne(query)).toEqual(javi);
     expect(store.find(query)).toEqual([javi]);

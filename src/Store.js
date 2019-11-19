@@ -77,7 +77,7 @@ export default class Store {
 
     if (value) {
       if (isArray) data[key] = data[key] ? [...data[key], encrypt(value, secret)] : [encrypt(value, secret)];
-      else data[key] = Object.assign({}, data[key], encrypt(value, secret));
+      else data[key] = encrypt(Object.assign({}, data[key], value), secret);
       adapter.write(data);
     } else if (memoryPool.length > 0) {
       memoryPool.forEach((item) => {

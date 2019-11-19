@@ -116,7 +116,7 @@ var Store = function () {
       var isArray = data[key] === undefined || Array.isArray(data[key]);
 
       if (value) {
-        if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [(0, _modules.encrypt)(value, secret)]) : [(0, _modules.encrypt)(value, secret)];else data[key] = Object.assign({}, data[key], (0, _modules.encrypt)(value, secret));
+        if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [(0, _modules.encrypt)(value, secret)]) : [(0, _modules.encrypt)(value, secret)];else data[key] = (0, _modules.encrypt)(Object.assign({}, data[key], value), secret);
         adapter.write(data);
       } else if (memoryPool.length > 0) {
         memoryPool.forEach(function (item) {
