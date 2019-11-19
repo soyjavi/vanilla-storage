@@ -14,6 +14,7 @@ describe('Store', () => {
   beforeEach(() => {
     if (fs.existsSync(`${folder}/store.json`)) fs.unlinkSync(`${folder}/store.json`);
     if (fs.existsSync(`${folder}/store_2.json`)) fs.unlinkSync(`${folder}/store_2.json`);
+    if (fs.existsSync(`${folder}/store_encript.json`)) fs.unlinkSync(`${folder}/store_encript.json`);
   });
 
   it('default', () => {
@@ -150,7 +151,6 @@ describe('Store', () => {
     expect(store.find(nextData)).toEqual([{ ...javi, ...nextData }, { ...john, ...nextData }]);
   });
 
-
   it('.remove()', () => {
     const store = new Store();
 
@@ -166,5 +166,37 @@ describe('Store', () => {
     expect(remove[0]).toEqual(frank);
     expect(store.findOne(query)).toEqual(undefined);
     expect(store.value.length).toEqual(3);
+  });
+
+  it('when {secret}', () => {
+    const secret = 'pāşšŵōřđ';
+    const store = new Store({ filename: 'store_encript', secret });
+
+    // -- Create
+    store.get('users');
+    store.push(javi);
+    expect(store.value.length).toEqual(1);
+    expect(store.value).toEqual([javi]);
+
+    // -- Read
+    const query = { id: 1 };
+    expect(store.findOne(query)).toEqual(javi);
+    expect(store.find(query)).toEqual([javi]);
+
+    // -- Update
+    const nextData = { twitter: 'soyjavi' };
+    const update = store.update(query, nextData);
+    expect(update.length).toEqual(1);
+    expect(update[0]).toEqual({ ...javi, ...nextData });
+    expect(store.findOne(query)).toEqual({ ...javi, ...nextData });
+
+    // -- Delete
+    store.push(frank);
+    const remove = store.remove(query);
+    expect(remove.length).toEqual(1);
+    expect(remove[0]).toEqual({ ...javi, ...nextData });
+    expect(store.findOne(query)).toEqual(undefined);
+    expect(store.value.length).toEqual(1);
+    expect(store.value).toEqual([frank]);
   });
 });
