@@ -149,4 +149,22 @@ describe('Store', () => {
     // expect(update).toEqual(([{ ...javi, ...nextData }, { ...john, ...nextData }]);
     expect(store.find(nextData)).toEqual([{ ...javi, ...nextData }, { ...john, ...nextData }]);
   });
+
+
+  it('.remove()', () => {
+    const store = new Store();
+
+    store.get('users');
+    store.push(javi);
+    store.push(frank);
+    store.push(john);
+    store.push(david);
+
+    const query = { id: 2 };
+    const remove = store.remove(query);
+    expect(remove.length).toEqual(1);
+    expect(remove[0]).toEqual(frank);
+    expect(store.findOne(query)).toEqual(undefined);
+    expect(store.value.length).toEqual(3);
+  });
 });

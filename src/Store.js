@@ -125,6 +125,28 @@ export default class Store {
     return values;
   }
 
+  remove(query) {
+    const { adapter, data, key } = state.get(this);
+    const queryFields = Object.keys(query);
+    const values = [];
+
+    data[key] = data[key].filter((row) => {
+      let found = true;
+
+      queryFields.some((field) => {
+        found = (row[field] === query[field]);
+        return !found;
+      });
+      if (found) values.push(row);
+
+      return !found;
+    });
+
+    if (values.length > 0) adapter.write(data);
+
+    return values;
+  }
+
   get value() {
     const { data, key } = state.get(this);
 
