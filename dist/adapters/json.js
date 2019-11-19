@@ -11,7 +11,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var fs = {
-  existsSync: function existsSync() {}
+  existsSync: function existsSync() {},
+  mkdirSync: function mkdirSync() {},
+  readFileSync: function readFileSync() {},
+  writeFileSync: function writeFileSync() {}
 };
 var path = {
   resolve: function resolve() {}
@@ -23,7 +26,7 @@ try {
     path = require('path'); // eslint-disable-line
   }
 } catch (error) {
-  console.log('ERROR');
+  fs.error = error;
 }
 
 var folder = path.resolve('.', 'store');
