@@ -9,6 +9,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _adapters = require('./adapters');
 
+var _modules = require('./modules');
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -32,7 +34,8 @@ var Store = function () {
         _props$defaults = props.defaults,
         defaults = _props$defaults === undefined ? {} : _props$defaults,
         _props$filename = props.filename,
-        filename = _props$filename === undefined ? 'store' : _props$filename;
+        filename = _props$filename === undefined ? 'store' : _props$filename,
+        secret = props.secret;
 
     var adapter = new Adapter({ defaults: defaults, filename: filename });
 
@@ -41,7 +44,8 @@ var Store = function () {
       autoSave: autoSave,
       data: adapter.read(),
       key: 'default',
-      memoryPool: []
+      memoryPool: [],
+      secret: secret
     });
 
     return this;
@@ -50,18 +54,11 @@ var Store = function () {
   _createClass(Store, [{
     key: 'findOne',
     value: function findOne(query) {
-      var _state$get = state.get(this),
-          data = _state$get.data,
-          key = _state$get.key;
-
       var queryFields = Object.keys(query);
 
-      return data[key].find(function (row) {
-        var found = true;
-
-        queryFields.some(function (field) {
-          found = row[field] === query[field];
-          return !found;
+      return this.value.find(function (row) {
+        var found = !queryFields.some(function (field) {
+          return !(row[field] === query[field]);
         });
 
         return found;
@@ -72,21 +69,13 @@ var Store = function () {
     value: function find() {
       var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      var _state$get2 = state.get(this),
-          data = _state$get2.data,
-          key = _state$get2.key;
-
       var queryFields = Object.keys(query);
       var values = [];
 
-      data[key].forEach(function (row) {
-        var found = true;
-
-        queryFields.some(function (field) {
-          found = row[field] === query[field];
-          return !found;
+      this.value.forEach(function (row) {
+        var found = !queryFields.some(function (field) {
+          return !(row[field] === query[field]);
         });
-
         if (found) values.push(row);
       });
 
@@ -104,10 +93,10 @@ var Store = function () {
     value: function push() {
       var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      var _state$get3 = state.get(this),
-          autoSave = _state$get3.autoSave,
-          key = _state$get3.key,
-          memoryPool = _state$get3.memoryPool;
+      var _state$get = state.get(this),
+          autoSave = _state$get.autoSave,
+          key = _state$get.key,
+          memoryPool = _state$get.memoryPool;
 
       if (autoSave) this.save(value);else memoryPool.push({ key: key, value: value });
 
@@ -116,21 +105,22 @@ var Store = function () {
   }, {
     key: 'save',
     value: function save(value) {
-      var _state$get4 = state.get(this),
-          adapter = _state$get4.adapter,
-          data = _state$get4.data,
-          key = _state$get4.key,
-          _state$get4$memoryPoo = _state$get4.memoryPool,
-          memoryPool = _state$get4$memoryPoo === undefined ? [] : _state$get4$memoryPoo;
+      var _state$get2 = state.get(this),
+          adapter = _state$get2.adapter,
+          data = _state$get2.data,
+          key = _state$get2.key,
+          _state$get2$memoryPoo = _state$get2.memoryPool,
+          memoryPool = _state$get2$memoryPoo === undefined ? [] : _state$get2$memoryPoo,
+          secret = _state$get2.secret;
 
       var isArray = data[key] === undefined || Array.isArray(data[key]);
 
       if (value) {
-        if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [value]) : [value];else data[key] = Object.assign({}, data[key], value);
+        if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [(0, _modules.encrypt)(value, secret)]) : [(0, _modules.encrypt)(value, secret)];else data[key] = Object.assign({}, data[key], (0, _modules.encrypt)(value, secret));
         adapter.write(data);
       } else if (memoryPool.length > 0) {
         memoryPool.forEach(function (item) {
-          data[item.key] = data[item.key] ? [].concat(_toConsumableArray(data[item.key]), [item.value]) : [item.value];
+          data[item.key] = data[item.key] ? [].concat(_toConsumableArray(data[item.key]), [(0, _modules.encrypt)(item.value, secret)]) : [(0, _modules.encrypt)(item.value, secret)];
         });
         adapter.write(data);
         state.set(this, Object.assign(state.get(this), { memoryPool: [] }));
@@ -139,22 +129,20 @@ var Store = function () {
   }, {
     key: 'update',
     value: function update(query, nextData) {
-      var _state$get5 = state.get(this),
-          adapter = _state$get5.adapter,
-          data = _state$get5.data,
-          key = _state$get5.key;
+      var _state$get3 = state.get(this),
+          adapter = _state$get3.adapter,
+          data = _state$get3.data,
+          key = _state$get3.key,
+          secret = _state$get3.secret;
 
       var queryFields = Object.keys(query);
       var values = [];
 
-      data[key] = data[key].map(function (row) {
-        var found = true;
-        var changes = void 0;
-
-        queryFields.some(function (field) {
-          found = row[field] === query[field];
-          return !found;
+      data[key] = this.value.map(function (row) {
+        var found = !queryFields.some(function (field) {
+          return !(row[field] === query[field]);
         });
+        var changes = void 0;
 
         if (found) {
           changes = Object.assign(row, nextData);
@@ -162,6 +150,35 @@ var Store = function () {
         }
 
         return changes || row;
+      }).map(function (row) {
+        return (0, _modules.encrypt)(row, secret);
+      });
+
+      if (values.length > 0) adapter.write(data);
+
+      return values;
+    }
+  }, {
+    key: 'remove',
+    value: function remove(query) {
+      var _state$get4 = state.get(this),
+          adapter = _state$get4.adapter,
+          data = _state$get4.data,
+          key = _state$get4.key,
+          secret = _state$get4.secret;
+
+      var queryFields = Object.keys(query);
+      var values = [];
+
+      data[key] = this.value.filter(function (row) {
+        var found = !queryFields.some(function (field) {
+          return !(row[field] === query[field]);
+        });
+        if (found) values.push(row);
+
+        return !found;
+      }).map(function (row) {
+        return (0, _modules.encrypt)(row, secret);
       });
 
       if (values.length > 0) adapter.write(data);
@@ -171,19 +188,24 @@ var Store = function () {
   }, {
     key: 'wipe',
     value: function wipe() {
-      var _state$get6 = state.get(this),
-          adapter = _state$get6.adapter;
+      var _state$get5 = state.get(this),
+          adapter = _state$get5.adapter;
 
       adapter.write();
     }
   }, {
     key: 'value',
     get: function get() {
-      var _state$get7 = state.get(this),
-          data = _state$get7.data,
-          key = _state$get7.key;
+      var _state$get6 = state.get(this),
+          data = _state$get6.data,
+          key = _state$get6.key,
+          secret = _state$get6.secret;
 
-      return data[key];
+      if (!secret) return data[key];
+
+      return Array.isArray(data[key]) ? data[key].map(function (item) {
+        return (0, _modules.decrypt)(item, secret);
+      }) : (0, _modules.decrypt)(data[key], secret);
     }
   }]);
 

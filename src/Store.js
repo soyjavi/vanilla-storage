@@ -1,4 +1,5 @@
 import { jsonAdapter, memoryAdapter, storageAdapter } from './adapters';
+import { encrypt, decrypt } from './modules';
 
 const state = new WeakMap();
 
@@ -15,6 +16,7 @@ export default class Store {
       autoSave = true,
       defaults = {},
       filename = 'store',
+      secret,
     } = props;
     const adapter = new Adapter({ defaults, filename });
 
@@ -24,40 +26,28 @@ export default class Store {
       data: adapter.read(),
       key: 'default',
       memoryPool: [],
+      secret,
     });
 
     return this;
   }
 
   findOne(query) {
-    const { data, key } = state.get(this);
     const queryFields = Object.keys(query);
 
-    return data[key].find((row) => {
-      let found = true;
-
-      queryFields.some((field) => {
-        found = (row[field] === query[field]);
-        return !found;
-      });
+    return this.value.find((row) => {
+      const found = !queryFields.some(field => !(row[field] === query[field]));
 
       return found;
     });
   }
 
   find(query = {}) {
-    const { data, key } = state.get(this);
     const queryFields = Object.keys(query);
     const values = [];
 
-    data[key].forEach((row) => {
-      let found = true;
-
-      queryFields.some((field) => {
-        found = (row[field] === query[field]);
-        return !found;
-      });
-
+    this.value.forEach((row) => {
+      const found = !queryFields.some(field => !(row[field] === query[field]));
       if (found) values.push(row);
     });
 
@@ -81,17 +71,19 @@ export default class Store {
 
   save(value) {
     const {
-      adapter, data, key, memoryPool = [],
+      adapter, data, key, memoryPool = [], secret,
     } = state.get(this);
     const isArray = data[key] === undefined || Array.isArray(data[key]);
 
     if (value) {
-      if (isArray) data[key] = data[key] ? [...data[key], value] : [value];
-      else data[key] = Object.assign({}, data[key], value);
+      if (isArray) data[key] = data[key] ? [...data[key], encrypt(value, secret)] : [encrypt(value, secret)];
+      else data[key] = Object.assign({}, data[key], encrypt(value, secret));
       adapter.write(data);
     } else if (memoryPool.length > 0) {
       memoryPool.forEach((item) => {
-        data[item.key] = data[item.key] ? [...data[item.key], item.value] : [item.value];
+        data[item.key] = data[item.key]
+          ? [...data[item.key], encrypt(item.value, secret)]
+          : [encrypt(item.value, secret)];
       });
       adapter.write(data);
       state.set(this, Object.assign(state.get(this), { memoryPool: [] }));
@@ -99,26 +91,46 @@ export default class Store {
   }
 
   update(query, nextData) {
-    const { adapter, data, key } = state.get(this);
+    const {
+      adapter, data, key, secret,
+    } = state.get(this);
     const queryFields = Object.keys(query);
     const values = [];
 
-    data[key] = data[key].map((row) => {
-      let found = true;
-      let changes;
+    data[key] = this.value
+      .map((row) => {
+        const found = !queryFields.some(field => !(row[field] === query[field]));
+        let changes;
 
-      queryFields.some((field) => {
-        found = (row[field] === query[field]);
+        if (found) {
+          changes = Object.assign(row, nextData);
+          values.push(changes);
+        }
+
+        return changes || row;
+      })
+      .map(row => encrypt(row, secret));
+
+    if (values.length > 0) adapter.write(data);
+
+    return values;
+  }
+
+  remove(query) {
+    const {
+      adapter, data, key, secret,
+    } = state.get(this);
+    const queryFields = Object.keys(query);
+    const values = [];
+
+    data[key] = this.value
+      .filter((row) => {
+        const found = !queryFields.some(field => !(row[field] === query[field]));
+        if (found) values.push(row);
+
         return !found;
-      });
-
-      if (found) {
-        changes = Object.assign(row, nextData);
-        values.push(changes);
-      }
-
-      return changes || row;
-    });
+      })
+      .map(row => encrypt(row, secret));
 
     if (values.length > 0) adapter.write(data);
 
@@ -126,9 +138,13 @@ export default class Store {
   }
 
   get value() {
-    const { data, key } = state.get(this);
+    const { data, key, secret } = state.get(this);
 
-    return data[key];
+    if (!secret) return data[key];
+
+    return Array.isArray(data[key])
+      ? data[key].map(item => decrypt(item, secret))
+      : decrypt(data[key], secret);
   }
 
   wipe() {
