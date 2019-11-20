@@ -181,6 +181,8 @@ describe('Store', () => {
     store.get('obj');
     store.save(javi);
     expect(store.value).toEqual(javi);
+    store.save({ location: ['a', 'b', 'c'] });
+    expect(store.value).toEqual({ ...javi, location: ['a', 'b', 'c'] });
 
     // -- Read
     store.get('users');
