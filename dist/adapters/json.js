@@ -1,14 +1,17 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 var fs = {
   existsSync: function existsSync() {},
@@ -21,8 +24,9 @@ var path = {
 };
 
 try {
-  if ((typeof process === 'undefined' ? 'undefined' : _typeof(process)) === 'object') {
+  if ((typeof process === "undefined" ? "undefined" : _typeof(process)) === 'object') {
     fs = require('fs'); // eslint-disable-line
+
     path = require('path'); // eslint-disable-line
   }
 } catch (error) {
@@ -31,17 +35,17 @@ try {
 
 var folder = path.resolve('.', 'store');
 
-var JsonAdapter = function () {
+var JsonAdapter = /*#__PURE__*/function () {
   function JsonAdapter(_ref) {
     var _ref$defaults = _ref.defaults,
-        defaults = _ref$defaults === undefined ? {} : _ref$defaults,
+        defaults = _ref$defaults === void 0 ? {} : _ref$defaults,
         filename = _ref.filename;
 
     _classCallCheck(this, JsonAdapter);
 
-    this.file = path.resolve('.', 'store/' + filename + '.json');
-
+    this.file = path.resolve('.', "store/".concat(filename, ".json"));
     if (!fs.existsSync(folder)) fs.mkdirSync(folder);
+
     if (!fs.existsSync(this.file)) {
       this.write(defaults);
     }
@@ -50,31 +54,29 @@ var JsonAdapter = function () {
   }
 
   _createClass(JsonAdapter, [{
-    key: 'read',
+    key: "read",
     value: function read() {
       var file = this.file;
-
-      var data = void 0;
+      var data;
 
       try {
         data = JSON.parse(fs.readFileSync(file, 'utf8'));
       } catch (error) {
-        throw new Error(file + ' could not be loaded correctly.');
+        throw new Error("".concat(file, " could not be loaded correctly."));
       }
 
       return data;
     }
   }, {
-    key: 'write',
+    key: "write",
     value: function write() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var file = this.file;
 
-
       try {
         fs.writeFileSync(file, JSON.stringify(data, null, 1), 'utf8');
       } catch (error) {
-        throw new Error(file + ' could not be saved correctly.');
+        throw new Error("".concat(file, " could not be saved correctly."));
       }
     }
   }]);
@@ -82,4 +84,4 @@ var JsonAdapter = function () {
   return JsonAdapter;
 }();
 
-exports.default = JsonAdapter;
+exports["default"] = JsonAdapter;

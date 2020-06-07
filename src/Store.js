@@ -36,7 +36,7 @@ export default class Store {
     const queryFields = Object.keys(query);
 
     return this.value.find((row) => {
-      const found = !queryFields.some(field => !(row[field] === query[field]));
+      const found = !queryFields.some((field) => !(row[field] === query[field]));
 
       return found;
     });
@@ -47,7 +47,7 @@ export default class Store {
     const values = [];
 
     this.value.forEach((row) => {
-      const found = !queryFields.some(field => !(row[field] === query[field]));
+      const found = !queryFields.some((field) => !(row[field] === query[field]));
       if (found) values.push(row);
     });
 
@@ -79,7 +79,7 @@ export default class Store {
       if (isArray) data[key] = data[key] ? [...data[key], encrypt(value, secret)] : [encrypt(value, secret)];
       else {
         if (secret && Object.keys(data[key]).length !== 0) data[key] = decrypt(data[key], secret);
-        data[key] = encrypt(Object.assign({}, data[key], value), secret);
+        data[key] = encrypt({ ...data[key], ...value }, secret);
       }
       adapter.write(data);
     } else if (memoryPool.length > 0) {
@@ -102,7 +102,7 @@ export default class Store {
 
     data[key] = this.value
       .map((row) => {
-        const found = !queryFields.some(field => !(row[field] === query[field]));
+        const found = !queryFields.some((field) => !(row[field] === query[field]));
         let changes;
 
         if (found) {
@@ -112,7 +112,7 @@ export default class Store {
 
         return changes || row;
       })
-      .map(row => encrypt(row, secret));
+      .map((row) => encrypt(row, secret));
 
     if (values.length > 0) adapter.write(data);
 
@@ -128,12 +128,12 @@ export default class Store {
 
     data[key] = this.value
       .filter((row) => {
-        const found = !queryFields.some(field => !(row[field] === query[field]));
+        const found = !queryFields.some((field) => !(row[field] === query[field]));
         if (found) values.push(row);
 
         return !found;
       })
-      .map(row => encrypt(row, secret));
+      .map((row) => encrypt(row, secret));
 
     if (values.length > 0) adapter.write(data);
 
@@ -146,7 +146,7 @@ export default class Store {
     if (!secret) return data[key];
 
     return Array.isArray(data[key])
-      ? data[key].map(item => decrypt(item, secret))
+      ? data[key].map((item) => decrypt(item, secret))
       : decrypt(data[key], secret);
   }
 

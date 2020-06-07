@@ -1,55 +1,58 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+exports["default"] = void 0;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var localStorage = typeof window !== 'undefined' && window.localStorage ? window.localStorage : { getItem: function getItem() {}, setItem: function setItem() {} };
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-var storageAdapter = function () {
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var localStorage = typeof window !== 'undefined' && window.localStorage ? window.localStorage : {
+  getItem: function getItem() {},
+  setItem: function setItem() {}
+};
+
+var storageAdapter = /*#__PURE__*/function () {
   function storageAdapter(_ref) {
     var _ref$defaults = _ref.defaults,
-        defaults = _ref$defaults === undefined ? {} : _ref$defaults,
+        defaults = _ref$defaults === void 0 ? {} : _ref$defaults,
         filename = _ref.filename;
 
     _classCallCheck(this, storageAdapter);
 
     this.key = filename;
     if (!localStorage.getItem(this.key)) localStorage.setItem(this.key, JSON.stringify(defaults));
-
     return this;
   }
 
   _createClass(storageAdapter, [{
-    key: 'read',
+    key: "read",
     value: function read() {
       var key = this.key;
-
-      var data = void 0;
+      var data;
 
       try {
         data = JSON.parse(localStorage.getItem(key));
       } catch (error) {
-        throw new Error(key + ' could not be loaded correctly.');
+        throw new Error("".concat(key, " could not be loaded correctly."));
       }
 
       return data;
     }
   }, {
-    key: 'write',
+    key: "write",
     value: function write() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var key = this.key;
 
-
       try {
         localStorage.setItem(this.key, JSON.stringify(data));
       } catch (error) {
-        throw new Error(key + ' could not be saved correctly.');
+        throw new Error("".concat(key, " could not be saved correctly."));
       }
     }
   }]);
@@ -57,4 +60,4 @@ var storageAdapter = function () {
   return storageAdapter;
 }();
 
-exports.default = storageAdapter;
+exports["default"] = storageAdapter;

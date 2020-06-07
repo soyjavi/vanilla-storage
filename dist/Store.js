@@ -1,44 +1,77 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.storageAdapter = exports.memoryAdapter = exports.jsonAdapter = undefined;
+Object.defineProperty(exports, "jsonAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _adapters.jsonAdapter;
+  }
+});
+Object.defineProperty(exports, "memoryAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _adapters.memoryAdapter;
+  }
+});
+Object.defineProperty(exports, "storageAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _adapters.storageAdapter;
+  }
+});
+exports["default"] = void 0;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _adapters = require("./adapters");
 
-var _adapters = require('./adapters');
+var _modules = require("./modules");
 
-var _modules = require('./modules');
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 var state = new WeakMap();
 
-exports.jsonAdapter = _adapters.jsonAdapter;
-exports.memoryAdapter = _adapters.memoryAdapter;
-exports.storageAdapter = _adapters.storageAdapter;
-
-var Store = function () {
+var Store = /*#__PURE__*/function () {
   function Store() {
     var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, Store);
 
     var _props$adapter = props.adapter,
-        Adapter = _props$adapter === undefined ? _adapters.jsonAdapter : _props$adapter,
+        Adapter = _props$adapter === void 0 ? _adapters.jsonAdapter : _props$adapter,
         _props$autoSave = props.autoSave,
-        autoSave = _props$autoSave === undefined ? true : _props$autoSave,
+        autoSave = _props$autoSave === void 0 ? true : _props$autoSave,
         _props$defaults = props.defaults,
-        defaults = _props$defaults === undefined ? {} : _props$defaults,
+        defaults = _props$defaults === void 0 ? {} : _props$defaults,
         _props$filename = props.filename,
-        filename = _props$filename === undefined ? 'store' : _props$filename,
+        filename = _props$filename === void 0 ? 'store' : _props$filename,
         secret = props.secret;
-
-    var adapter = new Adapter({ defaults: defaults, filename: filename });
-
+    var adapter = new Adapter({
+      defaults: defaults,
+      filename: filename
+    });
     state.set(this, {
       adapter: adapter,
       autoSave: autoSave,
@@ -47,49 +80,44 @@ var Store = function () {
       memoryPool: [],
       secret: secret
     });
-
     return this;
   }
 
   _createClass(Store, [{
-    key: 'findOne',
+    key: "findOne",
     value: function findOne(query) {
       var queryFields = Object.keys(query);
-
       return this.value.find(function (row) {
         var found = !queryFields.some(function (field) {
           return !(row[field] === query[field]);
         });
-
         return found;
       });
     }
   }, {
-    key: 'find',
+    key: "find",
     value: function find() {
       var query = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
       var queryFields = Object.keys(query);
       var values = [];
-
       this.value.forEach(function (row) {
         var found = !queryFields.some(function (field) {
           return !(row[field] === query[field]);
         });
         if (found) values.push(row);
       });
-
       return values.length > 0 ? values : undefined;
     }
   }, {
-    key: 'get',
+    key: "get",
     value: function get(key) {
-      state.set(this, Object.assign(state.get(this), { key: key }));
-
+      state.set(this, Object.assign(state.get(this), {
+        key: key
+      }));
       return this;
     }
   }, {
-    key: 'push',
+    key: "push",
     value: function push() {
       var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -98,19 +126,21 @@ var Store = function () {
           key = _state$get.key,
           memoryPool = _state$get.memoryPool;
 
-      if (autoSave) this.save(value);else memoryPool.push({ key: key, value: value });
-
+      if (autoSave) this.save(value);else memoryPool.push({
+        key: key,
+        value: value
+      });
       return value;
     }
   }, {
-    key: 'save',
+    key: "save",
     value: function save(value) {
       var _state$get2 = state.get(this),
           adapter = _state$get2.adapter,
           data = _state$get2.data,
           key = _state$get2.key,
           _state$get2$memoryPoo = _state$get2.memoryPool,
-          memoryPool = _state$get2$memoryPoo === undefined ? [] : _state$get2$memoryPoo,
+          memoryPool = _state$get2$memoryPoo === void 0 ? [] : _state$get2$memoryPoo,
           secret = _state$get2.secret;
 
       var isArray = data[key] === undefined || Array.isArray(data[key]);
@@ -118,7 +148,7 @@ var Store = function () {
       if (value) {
         if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [(0, _modules.encrypt)(value, secret)]) : [(0, _modules.encrypt)(value, secret)];else {
           if (secret && Object.keys(data[key]).length !== 0) data[key] = (0, _modules.decrypt)(data[key], secret);
-          data[key] = (0, _modules.encrypt)(Object.assign({}, data[key], value), secret);
+          data[key] = (0, _modules.encrypt)(_objectSpread(_objectSpread({}, data[key]), value), secret);
         }
         adapter.write(data);
       } else if (memoryPool.length > 0) {
@@ -126,11 +156,13 @@ var Store = function () {
           data[item.key] = data[item.key] ? [].concat(_toConsumableArray(data[item.key]), [(0, _modules.encrypt)(item.value, secret)]) : [(0, _modules.encrypt)(item.value, secret)];
         });
         adapter.write(data);
-        state.set(this, Object.assign(state.get(this), { memoryPool: [] }));
+        state.set(this, Object.assign(state.get(this), {
+          memoryPool: []
+        }));
       }
     }
   }, {
-    key: 'update',
+    key: "update",
     value: function update(query, nextData) {
       var _state$get3 = state.get(this),
           adapter = _state$get3.adapter,
@@ -140,12 +172,11 @@ var Store = function () {
 
       var queryFields = Object.keys(query);
       var values = [];
-
       data[key] = this.value.map(function (row) {
         var found = !queryFields.some(function (field) {
           return !(row[field] === query[field]);
         });
-        var changes = void 0;
+        var changes;
 
         if (found) {
           changes = Object.assign(row, nextData);
@@ -156,13 +187,11 @@ var Store = function () {
       }).map(function (row) {
         return (0, _modules.encrypt)(row, secret);
       });
-
       if (values.length > 0) adapter.write(data);
-
       return values;
     }
   }, {
-    key: 'remove',
+    key: "remove",
     value: function remove(query) {
       var _state$get4 = state.get(this),
           adapter = _state$get4.adapter,
@@ -172,24 +201,20 @@ var Store = function () {
 
       var queryFields = Object.keys(query);
       var values = [];
-
       data[key] = this.value.filter(function (row) {
         var found = !queryFields.some(function (field) {
           return !(row[field] === query[field]);
         });
         if (found) values.push(row);
-
         return !found;
       }).map(function (row) {
         return (0, _modules.encrypt)(row, secret);
       });
-
       if (values.length > 0) adapter.write(data);
-
       return values;
     }
   }, {
-    key: 'wipe',
+    key: "wipe",
     value: function wipe() {
       var _state$get5 = state.get(this),
           adapter = _state$get5.adapter;
@@ -197,7 +222,7 @@ var Store = function () {
       adapter.write();
     }
   }, {
-    key: 'value',
+    key: "value",
     get: function get() {
       var _state$get6 = state.get(this),
           data = _state$get6.data,
@@ -205,7 +230,6 @@ var Store = function () {
           secret = _state$get6.secret;
 
       if (!secret) return data[key];
-
       return Array.isArray(data[key]) ? data[key].map(function (item) {
         return (0, _modules.decrypt)(item, secret);
       }) : (0, _modules.decrypt)(data[key], secret);
@@ -215,4 +239,4 @@ var Store = function () {
   return Store;
 }();
 
-exports.default = Store;
+exports["default"] = Store;

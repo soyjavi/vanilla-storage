@@ -1,25 +1,35 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.memoryAdapter = exports.storageAdapter = exports.jsonAdapter = undefined;
+Object.defineProperty(exports, "jsonAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _json["default"];
+  }
+});
+Object.defineProperty(exports, "storageAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _storage["default"];
+  }
+});
+Object.defineProperty(exports, "memoryAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _memory["default"];
+  }
+});
+exports["default"] = void 0;
 
-var _json = require('./json');
+var _json = _interopRequireDefault(require("./json"));
 
-var _json2 = _interopRequireDefault(_json);
+var _storage = _interopRequireDefault(require("./storage"));
 
-var _storage = require('./storage');
+var _memory = _interopRequireDefault(require("./memory"));
 
-var _storage2 = _interopRequireDefault(_storage);
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var _memory = require('./memory');
-
-var _memory2 = _interopRequireDefault(_memory);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.jsonAdapter = _json2.default;
-exports.storageAdapter = _storage2.default;
-exports.memoryAdapter = _memory2.default;
-exports.default = _json2.default;
+var _default = _json["default"];
+exports["default"] = _default;
