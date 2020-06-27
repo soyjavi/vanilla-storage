@@ -1,23 +1,14 @@
 import { jsonAdapter, memoryAdapter, storageAdapter } from './adapters';
 import { encrypt, decrypt } from './modules';
 
+// eslint-disable-next-line no-undef
 const state = new WeakMap();
 
-export {
-  jsonAdapter,
-  memoryAdapter,
-  storageAdapter,
-};
+export { jsonAdapter, memoryAdapter, storageAdapter };
 
 export default class Store {
   constructor(props = {}) {
-    const {
-      adapter: Adapter = jsonAdapter,
-      autoSave = true,
-      defaults = {},
-      filename = 'store',
-      secret,
-    } = props;
+    const { adapter: Adapter = jsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
     const adapter = new Adapter({ defaults, filename });
 
     state.set(this, {
@@ -70,9 +61,7 @@ export default class Store {
   }
 
   save(value) {
-    const {
-      adapter, data, key, memoryPool = [], secret,
-    } = state.get(this);
+    const { adapter, data, key, memoryPool = [], secret } = state.get(this);
     const isArray = data[key] === undefined || Array.isArray(data[key]);
 
     if (value) {
@@ -94,9 +83,7 @@ export default class Store {
   }
 
   update(query, nextData) {
-    const {
-      adapter, data, key, secret,
-    } = state.get(this);
+    const { adapter, data, key, secret } = state.get(this);
     const queryFields = Object.keys(query);
     const values = [];
 
@@ -120,9 +107,7 @@ export default class Store {
   }
 
   remove(query) {
-    const {
-      adapter, data, key, secret,
-    } = state.get(this);
+    const { adapter, data, key, secret } = state.get(this);
     const queryFields = Object.keys(query);
     const values = [];
 
@@ -145,9 +130,7 @@ export default class Store {
 
     if (!secret) return data[key];
 
-    return Array.isArray(data[key])
-      ? data[key].map((item) => decrypt(item, secret))
-      : decrypt(data[key], secret);
+    return Array.isArray(data[key]) ? data[key].map((item) => decrypt(item, secret)) : decrypt(data[key], secret);
   }
 
   wipe() {

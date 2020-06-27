@@ -51,6 +51,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+// eslint-disable-next-line no-undef
 var state = new WeakMap();
 
 var Store = /*#__PURE__*/function () {

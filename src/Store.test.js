@@ -5,7 +5,7 @@ import Store from './Store';
 
 const folder = path.resolve('.', 'store');
 const javi = { id: 1, name: 'javi', role: 'dev' };
-const frank = {  id: 2, name: 'frank', role: 'bof' };
+const frank = { id: 2, name: 'frank', role: 'bof' };
 const john = { id: 3, name: 'john', role: 'dev' };
 const david = { id: 4, name: 'david', role: 'manager' };
 const storeObject = { defaults: { users: { soyjavi: undefined } } };
@@ -51,7 +51,7 @@ describe('Store', () => {
 
     const row = store.push({ hello: 'world' });
     expect(row).toEqual({ hello: 'world' });
-    expect(store.value).toEqual([{ hello: 'world'}]);
+    expect(store.value).toEqual([{ hello: 'world' }]);
   });
 
   it('.push() {object}', () => {
@@ -148,7 +148,10 @@ describe('Store', () => {
     update = store.update(query, nextData);
     expect(update.length).toEqual(2);
     // expect(update).toEqual(([{ ...javi, ...nextData }, { ...john, ...nextData }]);
-    expect(store.find(nextData)).toEqual([{ ...javi, ...nextData }, { ...john, ...nextData }]);
+    expect(store.find(nextData)).toEqual([
+      { ...javi, ...nextData },
+      { ...john, ...nextData },
+    ]);
   });
 
   it('.remove()', () => {

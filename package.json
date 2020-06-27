@@ -1,7 +1,7 @@
 {
   "name": "vanilla-storage",
-  "version": "0.2.3",
-  "description": "🍦A naive and simple driver for store data in javascript",
+  "version": "0.2.4",
+  "description": "🍦A naive and simple driver for store data with javascript",
   "keywords": [
     "store",
     "json",
@@ -21,13 +21,15 @@
   "homepage": "https://github.com/soyjavi/vanilla-storage",
   "bugs": "https://github.com/soyjavi/vanilla-storage/issues",
   "devDependencies": {
-    "@babel/cli": "7.10.1",
-    "@babel/core": "7.10.2",
-    "@babel/preset-env": "7.10.2",
-    "eslint": "7.2.0",
-    "eslint-config-airbnb-base": "14.1.0",
-    "eslint-plugin-import": "2.20.2",
-    "jest": "26.0.1"
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/preset-env": "^7.10.3",
+    "eslint": "^7.3.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.1.0",
+    "prettier": "^2.0.5"
   },
   "dependencies": {
     "crypto-js": "4.0.0"
@@ -35,6 +37,8 @@
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
     "test": "yarn build && jest src",
-    "lint": "eslint src"
+    "fix": "yarn prettier && yarn linter",
+    "prettier": "prettier src --write",
+    "linter": "eslint src --fix "
   }
 }

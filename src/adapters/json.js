@@ -13,7 +13,9 @@ try {
     fs = require('fs'); // eslint-disable-line
     path = require('path'); // eslint-disable-line
   }
-} catch (error) { fs.error = error; }
+} catch (error) {
+  fs.error = error;
+}
 
 const folder = path.resolve('.', 'store');
 

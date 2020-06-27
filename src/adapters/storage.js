@@ -1,6 +1,5 @@
-const localStorage = typeof window !== 'undefined' && window.localStorage
-  ? window.localStorage
-  : { getItem: () => {}, setItem: () => {} };
+const localStorage =
+  typeof window !== 'undefined' && window.localStorage ? window.localStorage : { getItem: () => {}, setItem: () => {} };
 
 export default class storageAdapter {
   constructor({ defaults = {}, filename }) {
