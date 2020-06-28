@@ -222,6 +222,10 @@ var Store = /*#__PURE__*/function () {
           adapter = _state$get5.adapter;
 
       adapter.write();
+      state.set(this, Object.assign(state.get(this), {
+        data: undefined,
+        memoryPool: []
+      }));
     }
   }, {
     key: "value",
@@ -230,8 +234,7 @@ var Store = /*#__PURE__*/function () {
           data = _state$get6.data,
           key = _state$get6.key,
           filename = _state$get6.filename,
-          secret = _state$get6.secret,
-          value = _state$get6.value;
+          secret = _state$get6.secret;
 
       if (!secret) return data[key];
       var decryptedValue;

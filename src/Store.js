@@ -127,7 +127,7 @@ export default class Store {
   }
 
   get value() {
-    const { data, key, filename, secret, value } = state.get(this);
+    const { data, key, filename, secret } = state.get(this);
 
     if (!secret) return data[key];
 
@@ -147,5 +147,6 @@ export default class Store {
     const { adapter } = state.get(this);
 
     adapter.write();
+    state.set(this, Object.assign(state.get(this), { data: undefined, memoryPool: [] }));
   }
 }
