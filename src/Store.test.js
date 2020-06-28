@@ -209,4 +209,22 @@ describe('Store', () => {
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([frank]);
   });
+
+  it('when {secret} invalid', () => {
+    const filename = 'store_encript';
+    const secret = 'pāşšŵōřđ';
+    let store = new Store({ filename, defaults: { obj: {}, users: [] }, secret });
+
+    // -- Create
+    const key = 'users';
+    store.get(key);
+    store.push(javi);
+    expect(store.value.length).toEqual(1);
+    expect(store.value).toEqual([javi]);
+
+    store = new Store({ filename, defaults: { obj: {}, users: [] }, secret: 'wrong' });
+    expect(() => {
+      expect(store.value).toEqual([javi]);
+    }).toThrowError(`filename ${filename} can't be decrypted.`);
+  });
 });

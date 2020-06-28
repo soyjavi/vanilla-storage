@@ -77,6 +77,7 @@ var Store = /*#__PURE__*/function () {
       adapter: adapter,
       autoSave: autoSave,
       data: adapter.read(),
+      filename: filename,
       key: 'default',
       memoryPool: [],
       secret: secret
@@ -228,12 +229,22 @@ var Store = /*#__PURE__*/function () {
       var _state$get6 = state.get(this),
           data = _state$get6.data,
           key = _state$get6.key,
-          secret = _state$get6.secret;
+          filename = _state$get6.filename,
+          secret = _state$get6.secret,
+          value = _state$get6.value;
 
       if (!secret) return data[key];
-      return Array.isArray(data[key]) ? data[key].map(function (item) {
-        return (0, _modules.decrypt)(item, secret);
-      }) : (0, _modules.decrypt)(data[key], secret);
+      var decryptedValue;
+
+      try {
+        decryptedValue = Array.isArray(data[key]) ? data[key].map(function (item) {
+          return (0, _modules.decrypt)(item, secret);
+        }) : (0, _modules.decrypt)(data[key], secret);
+      } catch (error) {
+        throw Error("filename ".concat(filename, " can't be decrypted."));
+      }
+
+      return decryptedValue;
     }
   }]);
 

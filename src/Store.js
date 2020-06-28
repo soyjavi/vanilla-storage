@@ -15,6 +15,7 @@ export default class Store {
       adapter,
       autoSave,
       data: adapter.read(),
+      filename,
       key: 'default',
       memoryPool: [],
       secret,
@@ -126,11 +127,20 @@ export default class Store {
   }
 
   get value() {
-    const { data, key, secret } = state.get(this);
+    const { data, key, filename, secret, value } = state.get(this);
 
     if (!secret) return data[key];
 
-    return Array.isArray(data[key]) ? data[key].map((item) => decrypt(item, secret)) : decrypt(data[key], secret);
+    let decryptedValue;
+    try {
+      decryptedValue = Array.isArray(data[key])
+        ? data[key].map((item) => decrypt(item, secret))
+        : decrypt(data[key], secret);
+    } catch (error) {
+      throw Error(`filename ${filename} can't be decrypted.`);
+    }
+
+    return decryptedValue;
   }
 
   wipe() {
