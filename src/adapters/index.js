@@ -1,6 +1,6 @@
 import jsonAdapter from './json';
-import storageAdapter from './storage';
 import memoryAdapter from './memory';
+import storageAdapter from './storage';
 
 export { jsonAdapter, storageAdapter, memoryAdapter };
 

@@ -1,6 +1,6 @@
 {
   "name": "vanilla-storage",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "🍦A naive and simple driver for store data with javascript",
   "keywords": [
     "store",
@@ -26,7 +26,7 @@
     "@babel/preset-env": "^7.10.3",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",
     "jest": "^26.1.0",
     "prettier": "^2.0.5"
@@ -37,8 +37,6 @@
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
     "test": "yarn build && jest src",
-    "fix": "yarn prettier && yarn linter",
-    "prettier": "prettier src --write",
-    "linter": "eslint src --fix "
+    "lint": "eslint src --fix "
   }
 }

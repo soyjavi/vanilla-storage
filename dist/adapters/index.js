@@ -9,25 +9,25 @@ Object.defineProperty(exports, "jsonAdapter", {
     return _json["default"];
   }
 });
-Object.defineProperty(exports, "storageAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _storage["default"];
-  }
-});
 Object.defineProperty(exports, "memoryAdapter", {
   enumerable: true,
   get: function get() {
     return _memory["default"];
   }
 });
+Object.defineProperty(exports, "storageAdapter", {
+  enumerable: true,
+  get: function get() {
+    return _storage["default"];
+  }
+});
 exports["default"] = void 0;
 
 var _json = _interopRequireDefault(require("./json"));
 
-var _storage = _interopRequireDefault(require("./storage"));
-
 var _memory = _interopRequireDefault(require("./memory"));
+
+var _storage = _interopRequireDefault(require("./storage"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 

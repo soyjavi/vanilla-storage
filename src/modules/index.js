@@ -1,4 +1,4 @@
-import encrypt from './encrypt';
 import decrypt from './decrypt';
+import encrypt from './encrypt';
 
 export { encrypt, decrypt };
