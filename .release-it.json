@@ -10,11 +10,8 @@
     "requireCleanWorkingDir": false,
     "commit": true,
     "commitMessage": "Release ${version}",
-    "tag": true,
-    "tagName": null,
-    "tagAnnotation": "Release ${version}",
-    "push": true,
-    "pushArgs": ["--follow-tags"]
+    "tag": false,
+    "push": true
   },
   "npm": {
     "publish": true
