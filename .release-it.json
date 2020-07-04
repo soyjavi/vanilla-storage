@@ -1,14 +1,20 @@
 {
-  "non-interactive": true,
-  "increment": "patch",
-  "requireCleanWorkingDir": true,
-  "buildCommand": "yarn run build",
-  "src": {
-    "beforeStartCommand": "yarn run lint && yarn run test",
-    "afterReleaseCommand": "echo Successfully released ${version}.",
-    "commitMessage": "Release v%s",
-    "tagName": "v%s",
-    "tagAnnotation": "Release v%s"
+  "hooks": {
+    "before:init": ["yarn run lint", "yarn run test"],
+    "after:bump": "yarn run build",
+    "after:git:release": "echo After git push, before github release",
+    "after:release": "echo Successfully released ${name} v${version} to ${repo.repository}."
+  },
+  "git": {
+    "changelog": "git log --pretty=format:\"* %s (%h)\" ${from}...${to}",
+    "requireCleanWorkingDir": false,
+    "commit": true,
+    "commitMessage": "Release ${version}",
+    "tag": true,
+    "tagName": null,
+    "tagAnnotation": "Release ${version}",
+    "push": true,
+    "pushArgs": ["--follow-tags"]
   },
   "npm": {
     "publish": true
