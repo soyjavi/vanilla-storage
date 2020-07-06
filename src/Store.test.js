@@ -32,18 +32,21 @@ describe('Store', () => {
 
   it('when {filename}', () => {
     const store = new Store({ filename: 'store_2' });
+    expect(fs.existsSync(`${folder}/store_2.json`)).toBeTruthy();
   });
 
   it('when {defaults}', () => {
     const store = new Store({ defaults: { numbers: [1, 2, 3] } });
     expect(store.value).toEqual(undefined);
-    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+    store.get('numbers');
+    expect(store.value).toEqual([1, 2, 3]);
   });
 
   it('when {defaults:object}', () => {
     const store = new Store(storeObject);
     expect(store.value).toEqual(undefined);
-    expect(store.get('users').value).toEqual({ soyjavi: undefined });
+    store.get('users');
+    expect(store.value).toEqual({ soyjavi: undefined });
   });
 
   it('.push()', () => {
@@ -57,7 +60,8 @@ describe('Store', () => {
   it('.push() {object}', () => {
     const store = new Store(storeObject);
 
-    const row = store.get('users').push({ javi: true });
+    store.get('users');
+    const row = store.push({ javi: true });
     expect(row).toEqual({ javi: true });
     expect(store.value).toEqual({ soyjavi: undefined, javi: true });
   });
@@ -65,7 +69,8 @@ describe('Store', () => {
   it('.get() & .push()', () => {
     const store = new Store();
 
-    store.get('spanish').push({ hola: 'mundo' });
+    store.get('spanish');
+    store.push({ hola: 'mundo' });
     expect(store.value).toEqual([{ hola: 'mundo' }]);
   });
 
@@ -111,18 +116,23 @@ describe('Store', () => {
   it('when {autoSave:false} && .get() && .push()', () => {
     const store = new Store({ autoSave: false });
 
-    store.get('basque').push({ kaixo: 'mundua' });
+    store.get('basque');
+    store.push({ kaixo: 'mundua' });
     expect(store.value).toEqual(undefined);
-    store.get('spanish').push({ hola: 'mundo' });
+    store.get('spanish');
+    store.push({ hola: 'mundo' });
     expect(store.value).toEqual(undefined);
-    store.get('english').push({ hello: 'world' });
+    store.get('english');
+    store.push({ hello: 'world' });
     expect(store.value).toEqual(undefined);
 
     store.save();
-
-    expect(store.get('basque').value).toEqual([{ kaixo: 'mundua' }]);
-    expect(store.get('spanish').value).toEqual([{ hola: 'mundo' }]);
-    expect(store.get('english').value).toEqual([{ hello: 'world' }]);
+    store.get('basque');
+    expect(store.value).toEqual([{ kaixo: 'mundua' }]);
+    store.get('spanish');
+    expect(store.value).toEqual([{ hola: 'mundo' }]);
+    store.get('english');
+    expect(store.value).toEqual([{ hello: 'world' }]);
 
     store.save();
   });

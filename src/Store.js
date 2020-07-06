@@ -1,10 +1,8 @@
-import { jsonAdapter, memoryAdapter, storageAdapter } from './adapters';
+import { jsonAdapter } from './adapters';
 import { encrypt, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
 const state = new WeakMap();
-
-export { jsonAdapter, memoryAdapter, storageAdapter };
 
 export default class Store {
   constructor(props = {}) {
@@ -48,8 +46,6 @@ export default class Store {
 
   get(key) {
     state.set(this, Object.assign(state.get(this), { key }));
-
-    return this;
   }
 
   push(value = {}) {
