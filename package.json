@@ -23,6 +23,7 @@
   "devDependencies": {
     "@babel/cli": "^7.10.3",
     "@babel/core": "^7.10.3",
+    "@babel/polyfill": "^7.10.4",
     "@babel/preset-env": "^7.10.3",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
@@ -37,7 +38,7 @@
   },
   "scripts": {
     "build": "babel src -d dist --ignore '**/*.test.js'",
-    "test": "yarn build && jest src",
+    "test": "yarn build && jest src --runInBand --collectCoverage",
     "lint": "eslint src --fix ",
     "release": "release-it"
   }
