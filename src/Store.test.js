@@ -12,9 +12,7 @@ const storeObject = { defaults: { users: { soyjavi: undefined } } };
 
 describe('Store', () => {
   beforeEach(() => {
-    if (fs.existsSync(`${folder}/store.json`)) fs.unlinkSync(`${folder}/store.json`);
-    if (fs.existsSync(`${folder}/store_2.json`)) fs.unlinkSync(`${folder}/store_2.json`);
-    if (fs.existsSync(`${folder}/store_encript.json`)) fs.unlinkSync(`${folder}/store_encript.json`);
+    if (fs.existsSync(folder)) fs.readdirSync(folder).forEach((file) => fs.unlinkSync(`${folder}/${file}`));
   });
 
   it('default', () => {
@@ -38,15 +36,13 @@ describe('Store', () => {
   it('when {defaults}', () => {
     const store = new Store({ defaults: { numbers: [1, 2, 3] } });
     expect(store.value).toEqual(undefined);
-    store.get('numbers');
-    expect(store.value).toEqual([1, 2, 3]);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 
   it('when {defaults:object}', () => {
     const store = new Store(storeObject);
     expect(store.value).toEqual(undefined);
-    store.get('users');
-    expect(store.value).toEqual({ soyjavi: undefined });
+    expect(store.get('users').value).toEqual({ soyjavi: undefined });
   });
 
   it('.push()', () => {
@@ -60,8 +56,7 @@ describe('Store', () => {
   it('.push() {object}', () => {
     const store = new Store(storeObject);
 
-    store.get('users');
-    const row = store.push({ javi: true });
+    const row = store.get('users').push({ javi: true });
     expect(row).toEqual({ javi: true });
     expect(store.value).toEqual({ soyjavi: undefined, javi: true });
   });
@@ -69,8 +64,7 @@ describe('Store', () => {
   it('.get() & .push()', () => {
     const store = new Store();
 
-    store.get('spanish');
-    store.push({ hola: 'mundo' });
+    store.get('spanish').push({ hola: 'mundo' });
     expect(store.value).toEqual([{ hola: 'mundo' }]);
   });
 
@@ -116,23 +110,17 @@ describe('Store', () => {
   it('when {autoSave:false} && .get() && .push()', () => {
     const store = new Store({ autoSave: false });
 
-    store.get('basque');
-    store.push({ kaixo: 'mundua' });
+    store.get('basque').push({ kaixo: 'mundua' });
     expect(store.value).toEqual(undefined);
-    store.get('spanish');
-    store.push({ hola: 'mundo' });
+    store.get('spanish').push({ hola: 'mundo' });
     expect(store.value).toEqual(undefined);
-    store.get('english');
-    store.push({ hello: 'world' });
+    store.get('english').push({ hello: 'world' });
     expect(store.value).toEqual(undefined);
 
     store.save();
-    store.get('basque');
-    expect(store.value).toEqual([{ kaixo: 'mundua' }]);
-    store.get('spanish');
-    expect(store.value).toEqual([{ hola: 'mundo' }]);
-    store.get('english');
-    expect(store.value).toEqual([{ hello: 'world' }]);
+    expect(store.get('basque').value).toEqual([{ kaixo: 'mundua' }]);
+    expect(store.get('spanish').value).toEqual([{ hola: 'mundo' }]);
+    expect(store.get('english').value).toEqual([{ hello: 'world' }]);
 
     store.save();
   });
@@ -186,13 +174,11 @@ describe('Store', () => {
     const store = new Store({ filename: 'store_encript', defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
-    store.get('users');
-    store.push(javi);
+    store.get('users').push(javi);
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 
-    store.get('obj');
-    store.save(javi);
+    store.get('obj').save(javi);
     expect(store.value).toEqual(javi);
     store.save({ location: ['a', 'b', 'c'] });
     expect(store.value).toEqual({ ...javi, location: ['a', 'b', 'c'] });
@@ -227,8 +213,7 @@ describe('Store', () => {
 
     // -- Create
     const key = 'users';
-    store.get(key);
-    store.push(javi);
+    store.get(key).push(javi);
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 
@@ -236,5 +221,13 @@ describe('Store', () => {
     expect(() => {
       expect(store.value).toEqual([javi]);
     }).toThrowError(`filename ${filename} can't be decrypted.`);
+  });
+
+  it('when {wipe}', () => {
+    const store = new Store({ defaults: { numbers: [1, 2, 3] } });
+
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+    store.wipe();
+    expect(store.get('numbers').value).toEqual(undefined);
   });
 });

@@ -174,13 +174,11 @@ describe('AsyncStore', () => {
     const store = await new AsyncStore({ filename: 'async-secret', defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
-    store.get('users');
-    await store.push(javi);
+    await store.get('users').push(javi);
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 
-    store.get('obj');
-    await store.save(javi);
+    await store.get('obj').save(javi);
     expect(store.value).toEqual(javi);
     await store.save({ location: ['a', 'b', 'c'] });
     expect(store.value).toEqual({ ...javi, location: ['a', 'b', 'c'] });
@@ -215,8 +213,7 @@ describe('AsyncStore', () => {
 
     // -- Create
     const key = 'users';
-    store.get(key);
-    await store.push(javi);
+    await store.get(key).push(javi);
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 

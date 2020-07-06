@@ -46,6 +46,7 @@ export default class Store {
 
   get(key) {
     state.set(this, Object.assign(state.get(this), { key }));
+    return this;
   }
 
   push(value = {}) {
@@ -143,6 +144,6 @@ export default class Store {
     const { adapter } = state.get(this);
 
     adapter.write();
-    state.set(this, Object.assign(state.get(this), { data: undefined, memoryPool: [] }));
+    state.set(this, Object.assign(state.get(this), { data: {}, memoryPool: [] }));
   }
 }
