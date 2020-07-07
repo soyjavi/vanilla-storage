@@ -1,4 +1,4 @@
-import { asynJsonAdapter } from './adapters';
+import { AsyncJsonAdapter } from './adapters';
 import { encrypt, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
@@ -6,7 +6,7 @@ const state = new WeakMap();
 
 export default class AsyncStore {
   constructor(props = {}) {
-    const { adapter: Adapter = asynJsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
+    const { adapter: Adapter = AsyncJsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
 
     return new Promise(async (resolve) => {
       const adapter = await new Adapter({ defaults, filename });

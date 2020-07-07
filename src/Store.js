@@ -1,4 +1,4 @@
-import { jsonAdapter } from './adapters';
+import { JsonAdapter } from './adapters';
 import { encrypt, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
@@ -6,7 +6,7 @@ const state = new WeakMap();
 
 export default class Store {
   constructor(props = {}) {
-    const { adapter: Adapter = jsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
+    const { adapter: Adapter = JsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
     const adapter = new Adapter({ defaults, filename });
 
     state.set(this, {
