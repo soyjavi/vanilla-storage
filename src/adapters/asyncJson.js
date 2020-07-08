@@ -20,7 +20,7 @@ try {
 const folder = path.resolve('.', 'store');
 
 export default class AsyncJsonAdapter {
-  constructor({ defaults = {}, filename }) {
+  constructor({ defaults = {}, filename = 'store' } = {}) {
     return new Promise((resolve) => {
       this.file = path.resolve('.', `store/${filename}.json`);
 
