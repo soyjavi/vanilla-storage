@@ -20,7 +20,7 @@ try {
 const folder = path.resolve('.', 'store');
 
 export default class JsonAdapter {
-  constructor({ defaults = {}, filename }) {
+  constructor({ defaults = {}, filename = 'store' } = {}) {
     this.file = path.resolve('.', `store/${filename}.json`);
 
     if (!fs.existsSync(folder)) fs.mkdirSync(folder);

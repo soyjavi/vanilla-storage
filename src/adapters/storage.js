@@ -1,8 +1,5 @@
-const localStorage =
-  typeof window !== 'undefined' && window.localStorage ? window.localStorage : { getItem: () => {}, setItem: () => {} };
-
-export default class storageAdapter {
-  constructor({ defaults = {}, filename }) {
+export default class StorageAdapter {
+  constructor({ defaults = {}, filename = 'store' } = {}) {
     this.key = filename;
     if (!localStorage.getItem(this.key)) localStorage.setItem(this.key, JSON.stringify(defaults));
 

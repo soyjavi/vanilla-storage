@@ -2,8 +2,9 @@ module.exports = {
   globals: {
     window: {},
   },
-  watchPathIgnorePatterns: ['/store/'],
-  testPathIgnorePatterns: ['/node_modules/'],
+  setupFiles: ['jest-localstorage-mock'],
   silent: false,
   testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/'],
+  watchPathIgnorePatterns: ['/store/'],
 };

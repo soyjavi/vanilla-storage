@@ -1,5 +1,5 @@
-export default class memoryAdapter {
-  constructor({ defaults = {} }) {
+export default class MemoryAdapter {
+  constructor({ defaults = {} } = {}) {
     this.store = defaults;
 
     return this;

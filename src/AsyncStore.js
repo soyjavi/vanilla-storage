@@ -1,25 +1,28 @@
-import { JsonAdapter } from './adapters';
+import { AsyncJsonAdapter } from './adapters';
 import { encrypt, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
 const state = new WeakMap();
 
-export default class Store {
+export default class AsyncStore {
   constructor(props = {}) {
-    const { adapter: Adapter = JsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
-    const adapter = new Adapter({ defaults, filename });
+    const { adapter: Adapter = AsyncJsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
 
-    state.set(this, {
-      adapter,
-      autoSave,
-      data: adapter.read(),
-      filename,
-      key: 'default',
-      memoryPool: [],
-      secret,
+    return new Promise(async (resolve) => {
+      const adapter = await new Adapter({ defaults, filename });
+
+      state.set(this, {
+        adapter,
+        autoSave,
+        data: await adapter.read(),
+        filename,
+        key: 'default',
+        memoryPool: [],
+        secret,
+      });
+
+      resolve(this);
     });
-
-    return this;
   }
 
   findOne(query) {
@@ -49,16 +52,16 @@ export default class Store {
     return this;
   }
 
-  push(value = {}) {
+  async push(value = {}) {
     const { autoSave, key, memoryPool } = state.get(this);
 
-    if (autoSave) this.save(value);
+    if (autoSave) await this.save(value);
     else memoryPool.push({ key, value });
 
     return value;
   }
 
-  save(value) {
+  async save(value) {
     const { adapter, data, key, memoryPool = [], secret } = state.get(this);
     const isArray = data[key] === undefined || Array.isArray(data[key]);
 
@@ -68,19 +71,19 @@ export default class Store {
         if (secret && Object.keys(data[key]).length !== 0) data[key] = decrypt(data[key], secret);
         data[key] = encrypt({ ...data[key], ...value }, secret);
       }
-      adapter.write(data);
+      await adapter.write(data);
     } else if (memoryPool.length > 0) {
       memoryPool.forEach((item) => {
         data[item.key] = data[item.key]
           ? [...data[item.key], encrypt(item.value, secret)]
           : [encrypt(item.value, secret)];
       });
-      adapter.write(data);
+      await adapter.write(data);
       state.set(this, Object.assign(state.get(this), { memoryPool: [] }));
     }
   }
 
-  update(query, nextData) {
+  async update(query, nextData) {
     const { adapter, data, key, secret } = state.get(this);
     const queryFields = Object.keys(query);
     const values = [];
@@ -99,12 +102,12 @@ export default class Store {
       })
       .map((row) => encrypt(row, secret));
 
-    if (values.length > 0) adapter.write(data);
+    if (values.length > 0) await adapter.write(data);
 
     return values;
   }
 
-  remove(query) {
+  async remove(query) {
     const { adapter, data, key, secret } = state.get(this);
     const queryFields = Object.keys(query);
     const values = [];
@@ -118,7 +121,7 @@ export default class Store {
       })
       .map((row) => encrypt(row, secret));
 
-    if (values.length > 0) adapter.write(data);
+    if (values.length > 0) await adapter.write(data);
 
     return values;
   }
@@ -140,10 +143,10 @@ export default class Store {
     return decryptedValue;
   }
 
-  wipe() {
+  async wipe() {
     const { adapter } = state.get(this);
 
-    adapter.write();
+    await adapter.write();
     state.set(this, Object.assign(state.get(this), { data: {}, memoryPool: [] }));
   }
 }
