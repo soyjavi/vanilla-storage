@@ -3,24 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "jsonAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _adapters.jsonAdapter;
-  }
-});
-Object.defineProperty(exports, "memoryAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _adapters.memoryAdapter;
-  }
-});
-Object.defineProperty(exports, "storageAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _adapters.storageAdapter;
-  }
-});
 exports["default"] = void 0;
 
 var _adapters = require("./adapters");
@@ -61,7 +43,7 @@ var Store = /*#__PURE__*/function () {
     _classCallCheck(this, Store);
 
     var _props$adapter = props.adapter,
-        Adapter = _props$adapter === void 0 ? _adapters.jsonAdapter : _props$adapter,
+        Adapter = _props$adapter === void 0 ? _adapters.JsonAdapter : _props$adapter,
         _props$autoSave = props.autoSave,
         autoSave = _props$autoSave === void 0 ? true : _props$autoSave,
         _props$defaults = props.defaults,
@@ -223,7 +205,7 @@ var Store = /*#__PURE__*/function () {
 
       adapter.write();
       state.set(this, Object.assign(state.get(this), {
-        data: undefined,
+        data: {},
         memoryPool: []
       }));
     }

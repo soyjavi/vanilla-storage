@@ -11,18 +11,19 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var memoryAdapter = /*#__PURE__*/function () {
-  function memoryAdapter(_ref) {
-    var _ref$defaults = _ref.defaults,
+var MemoryAdapter = /*#__PURE__*/function () {
+  function MemoryAdapter() {
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$defaults = _ref.defaults,
         defaults = _ref$defaults === void 0 ? {} : _ref$defaults;
 
-    _classCallCheck(this, memoryAdapter);
+    _classCallCheck(this, MemoryAdapter);
 
     this.store = defaults;
     return this;
   }
 
-  _createClass(memoryAdapter, [{
+  _createClass(MemoryAdapter, [{
     key: "read",
     value: function read() {
       return this.store;
@@ -35,7 +36,7 @@ var memoryAdapter = /*#__PURE__*/function () {
     }
   }]);
 
-  return memoryAdapter;
+  return MemoryAdapter;
 }();
 
-exports["default"] = memoryAdapter;
+exports["default"] = MemoryAdapter;

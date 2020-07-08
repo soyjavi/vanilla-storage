@@ -11,25 +11,22 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var localStorage = typeof window !== 'undefined' && window.localStorage ? window.localStorage : {
-  getItem: function getItem() {},
-  setItem: function setItem() {}
-};
-
-var storageAdapter = /*#__PURE__*/function () {
-  function storageAdapter(_ref) {
-    var _ref$defaults = _ref.defaults,
+var StorageAdapter = /*#__PURE__*/function () {
+  function StorageAdapter() {
+    var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+        _ref$defaults = _ref.defaults,
         defaults = _ref$defaults === void 0 ? {} : _ref$defaults,
-        filename = _ref.filename;
+        _ref$filename = _ref.filename,
+        filename = _ref$filename === void 0 ? 'store' : _ref$filename;
 
-    _classCallCheck(this, storageAdapter);
+    _classCallCheck(this, StorageAdapter);
 
     this.key = filename;
     if (!localStorage.getItem(this.key)) localStorage.setItem(this.key, JSON.stringify(defaults));
     return this;
   }
 
-  _createClass(storageAdapter, [{
+  _createClass(StorageAdapter, [{
     key: "read",
     value: function read() {
       var key = this.key;
@@ -57,7 +54,7 @@ var storageAdapter = /*#__PURE__*/function () {
     }
   }]);
 
-  return storageAdapter;
+  return StorageAdapter;
 }();
 
-exports["default"] = storageAdapter;
+exports["default"] = StorageAdapter;

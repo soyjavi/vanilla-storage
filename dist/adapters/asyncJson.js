@@ -35,55 +35,61 @@ try {
 
 var folder = path.resolve('.', 'store');
 
-var JsonAdapter = /*#__PURE__*/function () {
-  function JsonAdapter() {
+var AsyncJsonAdapter = /*#__PURE__*/function () {
+  function AsyncJsonAdapter() {
+    var _this = this;
+
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
         _ref$defaults = _ref.defaults,
         defaults = _ref$defaults === void 0 ? {} : _ref$defaults,
         _ref$filename = _ref.filename,
         filename = _ref$filename === void 0 ? 'store' : _ref$filename;
 
-    _classCallCheck(this, JsonAdapter);
+    _classCallCheck(this, AsyncJsonAdapter);
 
-    this.file = path.resolve('.', "store/".concat(filename, ".json"));
-    if (!fs.existsSync(folder)) fs.mkdirSync(folder);
+    return new Promise(function (resolve) {
+      _this.file = path.resolve('.', "store/".concat(filename, ".json"));
+      if (!fs.existsSync(folder)) fs.mkdirSync(folder);
 
-    if (!fs.existsSync(this.file)) {
-      this.write(defaults);
-    }
+      if (!fs.existsSync(_this.file)) {
+        _this.write(defaults);
+      }
 
-    return this;
+      return resolve(_this);
+    });
   }
 
-  _createClass(JsonAdapter, [{
+  _createClass(AsyncJsonAdapter, [{
     key: "read",
     value: function read() {
       var file = this.file;
       var data;
-
-      try {
-        data = JSON.parse(fs.readFileSync(file, 'utf8'));
-      } catch (error) {
-        throw new Error("".concat(file, " could not be loaded correctly."));
-      }
-
-      return data;
+      return new Promise(function (resolve, reject) {
+        try {
+          data = JSON.parse(fs.readFileSync(file, 'utf8'));
+          resolve(data);
+        } catch (error) {
+          reject(new Error("".concat(file, " could not be loaded correctly.")));
+        }
+      });
     }
   }, {
     key: "write",
     value: function write() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var file = this.file;
-
-      try {
-        fs.writeFileSync(file, JSON.stringify(data, null, 1), 'utf8');
-      } catch (error) {
-        throw new Error("".concat(file, " could not be saved correctly."));
-      }
+      return new Promise(function (resolve, reject) {
+        try {
+          fs.writeFileSync(file, JSON.stringify(data, null, 1), 'utf8');
+          resolve();
+        } catch (error) {
+          reject(new Error("".concat(file, " could not be saved correctly.")));
+        }
+      });
     }
   }]);
 
-  return JsonAdapter;
+  return AsyncJsonAdapter;
 }();
 
-exports["default"] = JsonAdapter;
+exports["default"] = AsyncJsonAdapter;
