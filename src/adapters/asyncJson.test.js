@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 
-import AsyncJsonAdapter from './asyncJson';
+import { AsyncJsonAdapter } from './asyncJson';
 
 const folder = path.resolve('.', 'store');
 const defaults = { numbers: [1, 2, 3] };

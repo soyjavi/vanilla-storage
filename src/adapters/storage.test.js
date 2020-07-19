@@ -1,4 +1,4 @@
-import StorageAdapter from './storage';
+import { StorageAdapter } from './storage';
 
 const defaults = { numbers: [1, 2, 3] };
 

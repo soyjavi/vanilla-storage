@@ -3,37 +3,51 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "AsyncJsonAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _asyncJson["default"];
-  }
-});
-Object.defineProperty(exports, "JsonAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _json["default"];
-  }
-});
-Object.defineProperty(exports, "MemoryAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _memory["default"];
-  }
-});
-Object.defineProperty(exports, "StorageAdapter", {
-  enumerable: true,
-  get: function get() {
-    return _storage["default"];
-  }
+
+var _asyncJson = require("./asyncJson");
+
+Object.keys(_asyncJson).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _asyncJson[key];
+    }
+  });
 });
 
-var _asyncJson = _interopRequireDefault(require("./asyncJson"));
+var _json = require("./json");
 
-var _json = _interopRequireDefault(require("./json"));
+Object.keys(_json).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _json[key];
+    }
+  });
+});
 
-var _memory = _interopRequireDefault(require("./memory"));
+var _memory = require("./memory");
 
-var _storage = _interopRequireDefault(require("./storage"));
+Object.keys(_memory).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _memory[key];
+    }
+  });
+});
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var _storage = require("./storage");
+
+Object.keys(_storage).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _storage[key];
+    }
+  });
+});

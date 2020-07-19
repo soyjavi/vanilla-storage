@@ -1,4 +1,4 @@
-export default class MemoryAdapter {
+export class MemoryAdapter {
   constructor({ defaults = {} } = {}) {
     this.store = defaults;
 

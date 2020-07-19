@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import JsonAdapter from './json';
+import { JsonAdapter } from './json';
 
 const folder = path.resolve('.', 'store');
 const defaults = { numbers: [1, 2, 3] };

@@ -1,4 +1,4 @@
-import MemoryAdapter from './memory';
+import { MemoryAdapter } from './memory';
 
 const defaults = { numbers: [1, 2, 3] };
 

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import Store from './Store';
+import { Storage } from './Storage';
 
 const folder = path.resolve('.', 'store');
 const javi = { id: 1, name: 'javi', role: 'dev' };
@@ -10,13 +10,13 @@ const john = { id: 3, name: 'john', role: 'dev' };
 const david = { id: 4, name: 'david', role: 'manager' };
 const storeObject = { defaults: { users: { soyjavi: undefined } } };
 
-describe('Store', () => {
+describe('Storage', () => {
   beforeEach(() => {
     if (fs.existsSync(folder)) fs.readdirSync(folder).forEach((file) => fs.unlinkSync(`${folder}/${file}`));
   });
 
   it('default', () => {
-    const store = new Store();
+    const store = new Storage();
 
     expect(Object.keys(store)).toEqual([]);
     expect(store.findOne).toBeDefined();
@@ -29,24 +29,24 @@ describe('Store', () => {
   });
 
   it('when {filename}', () => {
-    const store = new Store({ filename: 'store_2' });
+    const store = new Storage({ filename: 'store_2' });
     expect(fs.existsSync(`${folder}/store_2.json`)).toBeTruthy();
   });
 
   it('when {defaults}', () => {
-    const store = new Store({ defaults: { numbers: [1, 2, 3] } });
+    const store = new Storage({ defaults: { numbers: [1, 2, 3] } });
     expect(store.value).toEqual(undefined);
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 
   it('when {defaults:object}', () => {
-    const store = new Store(storeObject);
+    const store = new Storage(storeObject);
     expect(store.value).toEqual(undefined);
     expect(store.get('users').value).toEqual({ soyjavi: undefined });
   });
 
   it('.push()', () => {
-    const store = new Store();
+    const store = new Storage();
 
     const row = store.push({ hello: 'world' });
     expect(row).toEqual({ hello: 'world' });
@@ -54,7 +54,7 @@ describe('Store', () => {
   });
 
   it('.push() {object}', () => {
-    const store = new Store(storeObject);
+    const store = new Storage(storeObject);
 
     const row = store.get('users').push({ javi: true });
     expect(row).toEqual({ javi: true });
@@ -62,14 +62,14 @@ describe('Store', () => {
   });
 
   it('.get() & .push()', () => {
-    const store = new Store();
+    const store = new Storage();
 
     store.get('spanish').push({ hola: 'mundo' });
     expect(store.value).toEqual([{ hola: 'mundo' }]);
   });
 
   it('.findOne()', () => {
-    const store = new Store();
+    const store = new Storage();
 
     store.get('users');
     store.push(javi);
@@ -84,7 +84,7 @@ describe('Store', () => {
   });
 
   it('.find()', () => {
-    const store = new Store();
+    const store = new Storage();
 
     store.get('users');
     store.push(javi);
@@ -99,7 +99,7 @@ describe('Store', () => {
   });
 
   it('when {autoSave:false} && .push()', () => {
-    const store = new Store({ autoSave: false });
+    const store = new Storage({ autoSave: false });
 
     store.push({ kaixo: 'mundua' });
     store.push({ hola: 'mundo' });
@@ -108,7 +108,7 @@ describe('Store', () => {
   });
 
   it('when {autoSave:false} && .get() && .push()', () => {
-    const store = new Store({ autoSave: false });
+    const store = new Storage({ autoSave: false });
 
     store.get('basque').push({ kaixo: 'mundua' });
     expect(store.value).toEqual(undefined);
@@ -126,7 +126,7 @@ describe('Store', () => {
   });
 
   it('.update()', () => {
-    const store = new Store();
+    const store = new Storage();
 
     store.get('users');
     store.push(javi);
@@ -153,7 +153,7 @@ describe('Store', () => {
   });
 
   it('.remove()', () => {
-    const store = new Store();
+    const store = new Storage();
 
     store.get('users');
     store.push(javi);
@@ -171,7 +171,7 @@ describe('Store', () => {
 
   it('when {secret}', () => {
     const secret = 'pāşšŵōřđ';
-    const store = new Store({ filename: 'store_encript', defaults: { obj: {}, users: [] }, secret });
+    const store = new Storage({ filename: 'store_encript', defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
     store.get('users').push(javi);
@@ -209,7 +209,7 @@ describe('Store', () => {
   it('when {secret} invalid', () => {
     const filename = 'store_encript';
     const secret = 'pāşšŵōřđ';
-    let store = new Store({ filename, defaults: { obj: {}, users: [] }, secret });
+    let store = new Storage({ filename, defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
     const key = 'users';
@@ -217,14 +217,14 @@ describe('Store', () => {
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 
-    store = new Store({ filename, defaults: { obj: {}, users: [] }, secret: 'wrong' });
+    store = new Storage({ filename, defaults: { obj: {}, users: [] }, secret: 'wrong' });
     expect(() => {
       expect(store.value).toEqual([javi]);
     }).toThrowError(`filename ${filename} can't be decrypted.`);
   });
 
   it('when {wipe}', () => {
-    const store = new Store({ defaults: { numbers: [1, 2, 3] } });
+    const store = new Storage({ defaults: { numbers: [1, 2, 3] } });
 
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
     store.wipe();

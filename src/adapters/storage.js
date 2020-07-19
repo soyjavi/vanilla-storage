@@ -1,4 +1,4 @@
-export default class StorageAdapter {
+export class StorageAdapter {
   constructor({ defaults = {}, filename = 'store' } = {}) {
     this.key = filename;
     if (!localStorage.getItem(this.key)) localStorage.setItem(this.key, JSON.stringify(defaults));

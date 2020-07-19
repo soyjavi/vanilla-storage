@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import 'regenerator-runtime/runtime';
 
-import AsyncStore from './AsyncStore';
+import { AsyncStorage } from './AsyncStorage';
 
 const folder = path.resolve('.', 'store');
 const javi = { id: 1, name: 'javi', role: 'dev' };
@@ -11,13 +11,13 @@ const john = { id: 3, name: 'john', role: 'dev' };
 const david = { id: 4, name: 'david', role: 'manager' };
 const storeObject = { defaults: { users: { soyjavi: undefined } } };
 
-describe('AsyncStore', () => {
+describe('AsyncStorage', () => {
   beforeAll(() => {
     if (fs.existsSync(folder)) fs.readdirSync(folder).forEach((file) => fs.unlinkSync(`${folder}/${file}`));
   });
 
   it('default', async () => {
-    const store = await new AsyncStore({ filename: 'async' });
+    const store = await new AsyncStorage({ filename: 'async' });
 
     expect(Object.keys(store)).toEqual([]);
     expect(store.findOne).toBeDefined();
@@ -30,24 +30,24 @@ describe('AsyncStore', () => {
   });
 
   it('when {filename}', async () => {
-    const store = await new AsyncStore({ filename: 'async-store_2' });
+    const store = await new AsyncStorage({ filename: 'async-store_2' });
     expect(fs.existsSync(`${folder}/async-store_2.json`)).toBeTruthy();
   });
 
   it('when {defaults}', async () => {
-    const store = await new AsyncStore({ filename: 'async-defaults', defaults: { numbers: [1, 2, 3] } });
+    const store = await new AsyncStorage({ filename: 'async-defaults', defaults: { numbers: [1, 2, 3] } });
     expect(store.value).toEqual(undefined);
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 
   it('when {defaults:object}', async () => {
-    const store = await new AsyncStore({ filename: 'async-defaults-object', ...storeObject });
+    const store = await new AsyncStorage({ filename: 'async-defaults-object', ...storeObject });
     expect(store.value).toEqual(undefined);
     expect(store.get('users').value).toEqual(storeObject.defaults.users);
   });
 
   it('.push()', async () => {
-    const store = await new AsyncStore({ filename: 'async-push' });
+    const store = await new AsyncStorage({ filename: 'async-push' });
 
     const row = await store.push({ hello: 'world' });
     expect(row).toEqual({ hello: 'world' });
@@ -55,7 +55,7 @@ describe('AsyncStore', () => {
   });
 
   it('.push() {object}', async () => {
-    const store = await new AsyncStore({ filename: 'async-push-object', ...storeObject });
+    const store = await new AsyncStorage({ filename: 'async-push-object', ...storeObject });
 
     const row = await store.get('users').push({ javi: true });
     expect(row).toEqual({ javi: true });
@@ -63,14 +63,14 @@ describe('AsyncStore', () => {
   });
 
   it('.get() & .push()', async () => {
-    const store = await new AsyncStore({ filename: 'async-get-push' });
+    const store = await new AsyncStorage({ filename: 'async-get-push' });
 
     await store.get('spanish').push({ hola: 'mundo' });
     expect(store.value).toEqual([{ hola: 'mundo' }]);
   });
 
   it('.findOne()', async () => {
-    const store = await new AsyncStore({ filename: 'async-findone' });
+    const store = await new AsyncStorage({ filename: 'async-findone' });
 
     store.get('users');
     await store.push(javi);
@@ -85,7 +85,7 @@ describe('AsyncStore', () => {
   });
 
   it('.find()', async () => {
-    const store = await new AsyncStore({ filename: 'async-find' });
+    const store = await new AsyncStorage({ filename: 'async-find' });
 
     store.get('users');
     await store.push(javi);
@@ -100,7 +100,7 @@ describe('AsyncStore', () => {
   });
 
   it('when {autoSave:false} && .push()', async () => {
-    const store = await new AsyncStore({ filename: 'async-autosave-false', autoSave: false });
+    const store = await new AsyncStorage({ filename: 'async-autosave-false', autoSave: false });
 
     await store.push({ kaixo: 'mundua' });
     await store.push({ hola: 'mundo' });
@@ -109,7 +109,7 @@ describe('AsyncStore', () => {
   });
 
   it('when {autoSave:false} && .get() && .push()', async () => {
-    const store = await new AsyncStore({ filename: 'async-autosave-false-get-push', autoSave: false });
+    const store = await new AsyncStorage({ filename: 'async-autosave-false-get-push', autoSave: false });
 
     await store.get('basque').push({ kaixo: 'mundua' });
     expect(store.value).toEqual(undefined);
@@ -126,7 +126,7 @@ describe('AsyncStore', () => {
   });
 
   it('.update()', async () => {
-    const store = await new AsyncStore({ filename: 'async-update' });
+    const store = await new AsyncStorage({ filename: 'async-update' });
 
     store.get('users');
     await store.push(javi);
@@ -153,7 +153,7 @@ describe('AsyncStore', () => {
   });
 
   it('.remove()', async () => {
-    const store = await new AsyncStore({ filename: 'async-remove' });
+    const store = await new AsyncStorage({ filename: 'async-remove' });
 
     store.get('users');
     await store.push(javi);
@@ -171,7 +171,7 @@ describe('AsyncStore', () => {
 
   it('when {secret}', async () => {
     const secret = 'pāşšŵōřđ';
-    const store = await new AsyncStore({ filename: 'async-secret', defaults: { obj: {}, users: [] }, secret });
+    const store = await new AsyncStorage({ filename: 'async-secret', defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
     await store.get('users').push(javi);
@@ -209,7 +209,7 @@ describe('AsyncStore', () => {
   it('when {secret} invalid', async () => {
     const filename = 'async-secret-invalid';
     const secret = 'pāşšŵōřđ';
-    let store = await new AsyncStore({ filename, defaults: { obj: {}, users: [] }, secret });
+    let store = await new AsyncStorage({ filename, defaults: { obj: {}, users: [] }, secret });
 
     // -- Create
     const key = 'users';
@@ -217,14 +217,14 @@ describe('AsyncStore', () => {
     expect(store.value.length).toEqual(1);
     expect(store.value).toEqual([javi]);
 
-    store = await new AsyncStore({ filename, defaults: { obj: {}, users: [] }, secret: 'wrong' });
+    store = await new AsyncStorage({ filename, defaults: { obj: {}, users: [] }, secret: 'wrong' });
     expect(() => {
       expect(store.value).toEqual([javi]);
     }).toThrowError(`filename ${filename} can't be decrypted.`);
   });
 
   it('when {wipe}', async () => {
-    const store = await new AsyncStore({ filename: 'async-wipe', defaults: { numbers: [1, 2, 3] } });
+    const store = await new AsyncStorage({ filename: 'async-wipe', defaults: { numbers: [1, 2, 3] } });
 
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
     await store.wipe();
