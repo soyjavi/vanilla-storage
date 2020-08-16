@@ -152,6 +152,24 @@ describe('AsyncStorage', () => {
     ]);
   });
 
+  // it('.update() {object}', async () => {
+  //   const store = await new AsyncStorage({ filename: 'async-update', defaults: { obj: {} } });
+
+  //   expect(update.length).toEqual(1);
+  //   expect(update[0]).toEqual({ ...frank, ...nextData });
+  //   expect(store.findOne(query)).toEqual({ ...frank, ...nextData });
+
+  //   query = { role: 'dev' };
+  //   nextData = { role: 'developer' };
+  //   update = await store.update(query, nextData);
+
+  //   expect(update.length).toEqual(2);
+  //   expect(store.find(nextData)).toEqual([
+  //     { ...javi, ...nextData },
+  //     { ...john, ...nextData },
+  //   ]);
+  // });
+
   it('.remove()', async () => {
     const store = await new AsyncStorage({ filename: 'async-remove' });
 
@@ -226,8 +244,9 @@ describe('AsyncStorage', () => {
   it('when {wipe}', async () => {
     const store = await new AsyncStorage({ filename: 'async-wipe', defaults: { numbers: [1, 2, 3] } });
 
-    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+    await store.get('numbers').push(4);
+    expect(store.get('numbers').value).toEqual([1, 2, 3, 4]);
     await store.wipe();
-    expect(store.get('numbers').value).toEqual(undefined);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 });

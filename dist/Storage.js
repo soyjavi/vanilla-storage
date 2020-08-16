@@ -59,6 +59,7 @@ var Storage = /*#__PURE__*/function () {
       adapter: adapter,
       autoSave: autoSave,
       data: adapter.read(),
+      defaults: defaults,
       filename: filename,
       key: 'default',
       memoryPool: [],
@@ -201,11 +202,12 @@ var Storage = /*#__PURE__*/function () {
     key: "wipe",
     value: function wipe() {
       var _state$get5 = state.get(this),
-          adapter = _state$get5.adapter;
+          adapter = _state$get5.adapter,
+          defaults = _state$get5.defaults;
 
       adapter.write();
       state.set(this, Object.assign(state.get(this), {
-        data: {},
+        data: defaults,
         memoryPool: []
       }));
     }

@@ -10,8 +10,8 @@ let path = {
 
 try {
   if (typeof process === 'object') {
-    fs = require('fs'); // eslint-disable-line
-    path = require('path'); // eslint-disable-line
+    fs = require('fs');
+    path = require('path');
   }
 } catch (error) {
   fs.error = error;

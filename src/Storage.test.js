@@ -226,8 +226,9 @@ describe('Storage', () => {
   it('when {wipe}', () => {
     const store = new Storage({ defaults: { numbers: [1, 2, 3] } });
 
-    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+    store.get('numbers').push(4);
+    expect(store.get('numbers').value).toEqual([1, 2, 3, 4]);
     store.wipe();
-    expect(store.get('numbers').value).toEqual(undefined);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 });

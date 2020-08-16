@@ -15,6 +15,7 @@ export class AsyncStorage {
         adapter,
         autoSave,
         data: await adapter.read(),
+        defaults,
         filename,
         key: 'default',
         memoryPool: [],
@@ -144,9 +145,9 @@ export class AsyncStorage {
   }
 
   async wipe() {
-    const { adapter } = state.get(this);
+    const { adapter, defaults } = state.get(this);
 
     await adapter.write();
-    state.set(this, Object.assign(state.get(this), { data: {}, memoryPool: [] }));
+    state.set(this, Object.assign(state.get(this), { data: defaults, memoryPool: [] }));
   }
 }

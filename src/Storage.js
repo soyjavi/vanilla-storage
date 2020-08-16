@@ -13,6 +13,7 @@ export class Storage {
       adapter,
       autoSave,
       data: adapter.read(),
+      defaults,
       filename,
       key: 'default',
       memoryPool: [],
@@ -141,9 +142,9 @@ export class Storage {
   }
 
   wipe() {
-    const { adapter } = state.get(this);
+    const { adapter, defaults } = state.get(this);
 
     adapter.write();
-    state.set(this, Object.assign(state.get(this), { data: {}, memoryPool: [] }));
+    state.set(this, Object.assign(state.get(this), { data: defaults, memoryPool: [] }));
   }
 }

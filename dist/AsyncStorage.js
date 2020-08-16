@@ -81,24 +81,26 @@ var AsyncStorage = /*#__PURE__*/function () {
 
               case 9:
                 _context.t4 = _context.sent;
-                _context.t5 = filename;
-                _context.t6 = [];
-                _context.t7 = secret;
-                _context.t8 = {
+                _context.t5 = defaults;
+                _context.t6 = filename;
+                _context.t7 = [];
+                _context.t8 = secret;
+                _context.t9 = {
                   adapter: _context.t2,
                   autoSave: _context.t3,
                   data: _context.t4,
-                  filename: _context.t5,
+                  defaults: _context.t5,
+                  filename: _context.t6,
                   key: 'default',
-                  memoryPool: _context.t6,
-                  secret: _context.t7
+                  memoryPool: _context.t7,
+                  secret: _context.t8
                 };
 
-                _context.t0.set.call(_context.t0, _context.t1, _context.t8);
+                _context.t0.set.call(_context.t0, _context.t1, _context.t9);
 
                 resolve(_this);
 
-              case 16:
+              case 17:
               case "end":
                 return _context.stop();
             }
@@ -364,19 +366,19 @@ var AsyncStorage = /*#__PURE__*/function () {
     key: "wipe",
     value: function () {
       var _wipe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-        var _state$get5, adapter;
+        var _state$get5, adapter, defaults;
 
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                _state$get5 = state.get(this), adapter = _state$get5.adapter;
+                _state$get5 = state.get(this), adapter = _state$get5.adapter, defaults = _state$get5.defaults;
                 _context6.next = 3;
                 return adapter.write();
 
               case 3:
                 state.set(this, Object.assign(state.get(this), {
-                  data: {},
+                  data: defaults,
                   memoryPool: []
                 }));
 
