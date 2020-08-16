@@ -144,7 +144,7 @@ export class Storage {
   wipe() {
     const { adapter, defaults } = state.get(this);
 
-    adapter.write();
+    adapter.write(defaults);
     state.set(this, Object.assign(state.get(this), { data: defaults, memoryPool: [] }));
   }
 }

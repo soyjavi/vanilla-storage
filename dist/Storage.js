@@ -205,7 +205,7 @@ var Storage = /*#__PURE__*/function () {
           adapter = _state$get5.adapter,
           defaults = _state$get5.defaults;
 
-      adapter.write();
+      adapter.write(defaults);
       state.set(this, Object.assign(state.get(this), {
         data: defaults,
         memoryPool: []

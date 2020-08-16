@@ -374,7 +374,7 @@ var AsyncStorage = /*#__PURE__*/function () {
               case 0:
                 _state$get5 = state.get(this), adapter = _state$get5.adapter, defaults = _state$get5.defaults;
                 _context6.next = 3;
-                return adapter.write();
+                return adapter.write(defaults);
 
               case 3:
                 state.set(this, Object.assign(state.get(this), {
