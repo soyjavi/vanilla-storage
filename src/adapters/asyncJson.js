@@ -20,7 +20,7 @@ try {
 export class AsyncJsonAdapter {
   constructor({ defaults = {}, filename = 'store' } = {}) {
     return new Promise((resolve) => {
-      const folder = path ? path.resolve('.', 'store') : undefined;
+      const folder = path.resolve('.', 'store');
       this.file = path.resolve('.', `store/${filename}.json`);
 
       if (!fs.existsSync(folder)) fs.mkdirSync(folder);

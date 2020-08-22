@@ -32,8 +32,6 @@ try {
   fs.error = error;
 }
 
-var folder = path.resolve('.', 'store');
-
 var JsonAdapter = /*#__PURE__*/function () {
   function JsonAdapter() {
     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
@@ -44,6 +42,7 @@ var JsonAdapter = /*#__PURE__*/function () {
 
     _classCallCheck(this, JsonAdapter);
 
+    var folder = path.resolve('.', 'store');
     this.file = path.resolve('.', "store/".concat(filename, ".json"));
     if (!fs.existsSync(folder)) fs.mkdirSync(folder);
 

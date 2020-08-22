@@ -45,7 +45,7 @@ var AsyncJsonAdapter = /*#__PURE__*/function () {
     _classCallCheck(this, AsyncJsonAdapter);
 
     return new Promise(function (resolve) {
-      var folder = path ? path.resolve('.', 'store') : undefined;
+      var folder = path.resolve('.', 'store');
       _this.file = path.resolve('.', "store/".concat(filename, ".json"));
       if (!fs.existsSync(folder)) fs.mkdirSync(folder);
 
