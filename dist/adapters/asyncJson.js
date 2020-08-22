@@ -32,8 +32,6 @@ try {
   fs.error = error;
 }
 
-var folder = path.resolve('.', 'store');
-
 var AsyncJsonAdapter = /*#__PURE__*/function () {
   function AsyncJsonAdapter() {
     var _this = this;
@@ -47,6 +45,7 @@ var AsyncJsonAdapter = /*#__PURE__*/function () {
     _classCallCheck(this, AsyncJsonAdapter);
 
     return new Promise(function (resolve) {
+      var folder = path ? path.resolve('.', 'store') : undefined;
       _this.file = path.resolve('.', "store/".concat(filename, ".json"));
       if (!fs.existsSync(folder)) fs.mkdirSync(folder);
 
