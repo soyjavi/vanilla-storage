@@ -1,4 +1,5 @@
+import cloneObject from './cloneObject';
 import decrypt from './decrypt';
 import encrypt from './encrypt';
 
-export { encrypt, decrypt };
+export { cloneObject, encrypt, decrypt };
