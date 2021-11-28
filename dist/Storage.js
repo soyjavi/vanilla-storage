@@ -59,7 +59,7 @@ var Storage = /*#__PURE__*/function () {
       adapter: adapter,
       autoSave: autoSave,
       data: adapter.read(),
-      defaults: defaults,
+      defaults: (0, _modules.cloneObject)(defaults),
       filename: filename,
       key: 'default',
       memoryPool: [],
@@ -200,14 +200,18 @@ var Storage = /*#__PURE__*/function () {
     }
   }, {
     key: "wipe",
-    value: function wipe() {
+    value: function wipe(key) {
       var _state$get5 = state.get(this),
           adapter = _state$get5.adapter,
-          defaults = _state$get5.defaults;
+          _state$get5$data = _state$get5.data,
+          data = _state$get5$data === void 0 ? {} : _state$get5$data,
+          _state$get5$defaults = _state$get5.defaults,
+          defaults = _state$get5$defaults === void 0 ? {} : _state$get5$defaults;
 
-      adapter.write(defaults);
+      var nextData = (0, _modules.cloneObject)(key ? _objectSpread(_objectSpread({}, data), {}, _defineProperty({}, key, defaults[key])) : defaults);
+      adapter.write(nextData);
       state.set(this, Object.assign(state.get(this), {
-        data: defaults,
+        data: nextData,
         memoryPool: []
       }));
     }
