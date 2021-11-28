@@ -242,11 +242,23 @@ describe('AsyncStorage', () => {
   });
 
   it('when {wipe}', async () => {
-    const store = await new AsyncStorage({ filename: 'async-wipe', defaults: { numbers: [1, 2, 3] } });
+    const store = await new AsyncStorage({
+      filename: 'async-wipe',
+      defaults: { letters: ['a', 'b', 'c'], numbers: [1, 2, 3] },
+    });
 
+    await store.get('letters').push('d');
     await store.get('numbers').push(4);
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c', 'd']);
     expect(store.get('numbers').value).toEqual([1, 2, 3, 4]);
     await store.wipe();
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c']);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+
+    await store.get('letters').push('d');
+    await store.get('numbers').push(4);
+    await store.wipe('numbers');
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c', 'd']);
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 });

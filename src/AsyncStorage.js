@@ -1,5 +1,5 @@
 import { AsyncJsonAdapter } from './adapters';
-import { encrypt, decrypt } from './modules';
+import { cloneObject, encrypt, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
 const state = new WeakMap();
@@ -15,7 +15,7 @@ export class AsyncStorage {
         adapter,
         autoSave,
         data: await adapter.read(),
-        defaults,
+        defaults: cloneObject(defaults),
         filename,
         key: 'default',
         memoryPool: [],
@@ -144,10 +144,11 @@ export class AsyncStorage {
     return decryptedValue;
   }
 
-  async wipe() {
-    const { adapter, defaults } = state.get(this);
+  async wipe(key) {
+    const { adapter, data = {}, defaults = {} } = state.get(this);
 
-    await adapter.write(defaults);
-    state.set(this, Object.assign(state.get(this), { data: defaults, memoryPool: [] }));
+    const nextData = cloneObject(key ? { ...data, [key]: defaults[key] } : defaults);
+    await adapter.write(nextData);
+    state.set(this, Object.assign(state.get(this), { data: nextData, memoryPool: [] }));
   }
 }
