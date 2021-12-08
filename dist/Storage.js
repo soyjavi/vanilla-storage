@@ -131,10 +131,15 @@ var Storage = /*#__PURE__*/function () {
       var isArray = data[key] === undefined || Array.isArray(data[key]);
 
       if (value) {
-        if (isArray) data[key] = data[key] ? [].concat(_toConsumableArray(data[key]), [(0, _modules.encrypt)(value, secret)]) : [(0, _modules.encrypt)(value, secret)];else {
+        if (isArray) {
+          data[key] = data[key] ? Array.isArray(value) ? [].concat(_toConsumableArray(data[key]), _toConsumableArray(value.map(function (item) {
+            return (0, _modules.encrypt)(item, secret);
+          }))) : [].concat(_toConsumableArray(data[key]), [(0, _modules.encrypt)(value, secret)]) : [(0, _modules.encrypt)(value, secret)];
+        } else {
           if (secret && Object.keys(data[key]).length !== 0) data[key] = (0, _modules.decrypt)(data[key], secret);
           data[key] = (0, _modules.encrypt)(_objectSpread(_objectSpread({}, data[key]), value), secret);
         }
+
         adapter.write(data);
       } else if (memoryPool.length > 0) {
         memoryPool.forEach(function (item) {
