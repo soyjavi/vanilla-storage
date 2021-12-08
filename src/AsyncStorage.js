@@ -67,8 +67,13 @@ export class AsyncStorage {
     const isArray = data[key] === undefined || Array.isArray(data[key]);
 
     if (value) {
-      if (isArray) data[key] = data[key] ? [...data[key], encrypt(value, secret)] : [encrypt(value, secret)];
-      else {
+      if (isArray) {
+        data[key] = data[key]
+          ? Array.isArray(value)
+            ? [...data[key], ...value.map((item) => encrypt(item, secret))]
+            : [...data[key], encrypt(value, secret)]
+          : [encrypt(value, secret)];
+      } else {
         if (secret && Object.keys(data[key]).length !== 0) data[key] = decrypt(data[key], secret);
         data[key] = encrypt({ ...data[key], ...value }, secret);
       }

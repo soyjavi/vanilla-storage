@@ -62,6 +62,17 @@ describe('AsyncStorage', () => {
     expect(store.value).toEqual({ soyjavi: undefined, javi: true });
   });
 
+  it('.push() [array]', async () => {
+    const store = await new AsyncStorage({ filename: 'async-push-object', family: [] });
+
+    store.get('family');
+    await store.push({ javi: true });
+    await store.push({ eki: true });
+    expect(store.value).toEqual([{ javi: true }, { eki: true }]);
+    await store.push([{ alaia: true }, { you: true }]);
+    expect(store.value).toEqual([{ javi: true }, { eki: true }, { alaia: true }, { you: true }]);
+  });
+
   it('.get() & .push()', async () => {
     const store = await new AsyncStorage({ filename: 'async-get-push' });
 
