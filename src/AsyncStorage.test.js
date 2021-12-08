@@ -62,6 +62,17 @@ describe('AsyncStorage', () => {
     expect(store.value).toEqual({ soyjavi: undefined, javi: true });
   });
 
+  it('.push() [array]', async () => {
+    const store = await new AsyncStorage({ filename: 'async-push-object', family: [] });
+
+    store.get('family');
+    await store.push({ javi: true });
+    await store.push({ eki: true });
+    expect(store.value).toEqual([{ javi: true }, { eki: true }]);
+    await store.push([{ alaia: true }, { you: true }]);
+    expect(store.value).toEqual([{ javi: true }, { eki: true }, { alaia: true }, { you: true }]);
+  });
+
   it('.get() & .push()', async () => {
     const store = await new AsyncStorage({ filename: 'async-get-push' });
 
@@ -242,11 +253,23 @@ describe('AsyncStorage', () => {
   });
 
   it('when {wipe}', async () => {
-    const store = await new AsyncStorage({ filename: 'async-wipe', defaults: { numbers: [1, 2, 3] } });
+    const store = await new AsyncStorage({
+      filename: 'async-wipe',
+      defaults: { letters: ['a', 'b', 'c'], numbers: [1, 2, 3] },
+    });
 
+    await store.get('letters').push('d');
     await store.get('numbers').push(4);
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c', 'd']);
     expect(store.get('numbers').value).toEqual([1, 2, 3, 4]);
     await store.wipe();
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c']);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+
+    await store.get('letters').push('d');
+    await store.get('numbers').push(4);
+    await store.wipe('numbers');
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c', 'd']);
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 });

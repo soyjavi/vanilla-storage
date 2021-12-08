@@ -8,7 +8,12 @@ const javi = { id: 1, name: 'javi', role: 'dev' };
 const frank = { id: 2, name: 'frank', role: 'bof' };
 const john = { id: 3, name: 'john', role: 'dev' };
 const david = { id: 4, name: 'david', role: 'manager' };
-const storeObject = { defaults: { users: { soyjavi: undefined } } };
+const storeObject = {
+  defaults: {
+    demo: [],
+    users: { soyjavi: undefined },
+  },
+};
 
 describe('Storage', () => {
   beforeEach(() => {
@@ -50,7 +55,8 @@ describe('Storage', () => {
 
     const row = store.push({ hello: 'world' });
     expect(row).toEqual({ hello: 'world' });
-    expect(store.value).toEqual([{ hello: 'world' }]);
+    store.push({ hola: 'mundo' });
+    expect(store.value).toEqual([{ hello: 'world' }, { hola: 'mundo' }]);
   });
 
   it('.push() {object}', () => {
@@ -58,7 +64,20 @@ describe('Storage', () => {
 
     const row = store.get('users').push({ javi: true });
     expect(row).toEqual({ javi: true });
-    expect(store.value).toEqual({ soyjavi: undefined, javi: true });
+    store.push({ eki: true });
+    expect(store.value).toEqual({ soyjavi: undefined, javi: true, eki: true });
+  });
+
+  it('.push() [array]', () => {
+    const store = new Storage({ family: [] });
+
+    store.get('family');
+
+    store.push({ javi: true });
+    store.push({ eki: true });
+    expect(store.value).toEqual([{ javi: true }, { eki: true }]);
+    store.push([{ alaia: true }, { you: true }]);
+    expect(store.value).toEqual([{ javi: true }, { eki: true }, { alaia: true }, { you: true }]);
   });
 
   it('.get() & .push()', () => {
@@ -224,11 +243,21 @@ describe('Storage', () => {
   });
 
   it('when {wipe}', () => {
-    const store = new Storage({ defaults: { numbers: [1, 2, 3] } });
+    const store = new Storage({ defaults: { letters: ['a', 'b', 'c'], numbers: [1, 2, 3] } });
 
+    store.get('letters').push('d');
     store.get('numbers').push(4);
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c', 'd']);
     expect(store.get('numbers').value).toEqual([1, 2, 3, 4]);
+
     store.wipe();
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c']);
+    expect(store.get('numbers').value).toEqual([1, 2, 3]);
+
+    store.get('letters').push('d');
+    store.get('numbers').push(4);
+    store.wipe('numbers');
+    expect(store.get('letters').value).toEqual(['a', 'b', 'c', 'd']);
     expect(store.get('numbers').value).toEqual([1, 2, 3]);
   });
 });

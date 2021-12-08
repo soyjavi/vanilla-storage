@@ -1,5 +1,5 @@
 import { JsonAdapter } from './adapters';
-import { encrypt, decrypt } from './modules';
+import { cloneObject, encrypt, decrypt } from './modules';
 
 // eslint-disable-next-line no-undef
 const state = new WeakMap();
@@ -13,7 +13,7 @@ export class Storage {
       adapter,
       autoSave,
       data: adapter.read(),
-      defaults,
+      defaults: cloneObject(defaults),
       filename,
       key: 'default',
       memoryPool: [],
@@ -64,8 +64,13 @@ export class Storage {
     const isArray = data[key] === undefined || Array.isArray(data[key]);
 
     if (value) {
-      if (isArray) data[key] = data[key] ? [...data[key], encrypt(value, secret)] : [encrypt(value, secret)];
-      else {
+      if (isArray) {
+        data[key] = data[key]
+          ? Array.isArray(value)
+            ? [...data[key], ...value.map((item) => encrypt(item, secret))]
+            : [...data[key], encrypt(value, secret)]
+          : [encrypt(value, secret)];
+      } else {
         if (secret && Object.keys(data[key]).length !== 0) data[key] = decrypt(data[key], secret);
         data[key] = encrypt({ ...data[key], ...value }, secret);
       }
@@ -141,10 +146,11 @@ export class Storage {
     return decryptedValue;
   }
 
-  wipe() {
-    const { adapter, defaults } = state.get(this);
+  wipe(key) {
+    const { adapter, data = {}, defaults = {} } = state.get(this);
 
-    adapter.write(defaults);
-    state.set(this, Object.assign(state.get(this), { data: defaults, memoryPool: [] }));
+    const nextData = cloneObject(key ? { ...data, [key]: defaults[key] } : defaults);
+    adapter.write(nextData);
+    state.set(this, Object.assign(state.get(this), { data: nextData, memoryPool: [] }));
   }
 }

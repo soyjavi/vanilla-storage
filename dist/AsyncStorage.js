@@ -81,7 +81,7 @@ var AsyncStorage = /*#__PURE__*/function () {
 
               case 9:
                 _context.t4 = _context.sent;
-                _context.t5 = defaults;
+                _context.t5 = (0, _modules.cloneObject)(defaults);
                 _context.t6 = filename;
                 _context.t7 = [];
                 _context.t8 = secret;
@@ -370,24 +370,25 @@ var AsyncStorage = /*#__PURE__*/function () {
   }, {
     key: "wipe",
     value: function () {
-      var _wipe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
-        var _state$get5, adapter, defaults;
+      var _wipe = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(key) {
+        var _state$get5, adapter, _state$get5$data, data, _state$get5$defaults, defaults, nextData;
 
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
-                _state$get5 = state.get(this), adapter = _state$get5.adapter, defaults = _state$get5.defaults;
-                _context6.next = 3;
-                return adapter.write(defaults);
+                _state$get5 = state.get(this), adapter = _state$get5.adapter, _state$get5$data = _state$get5.data, data = _state$get5$data === void 0 ? {} : _state$get5$data, _state$get5$defaults = _state$get5.defaults, defaults = _state$get5$defaults === void 0 ? {} : _state$get5$defaults;
+                nextData = (0, _modules.cloneObject)(key ? _objectSpread(_objectSpread({}, data), {}, _defineProperty({}, key, defaults[key])) : defaults);
+                _context6.next = 4;
+                return adapter.write(nextData);
 
-              case 3:
+              case 4:
                 state.set(this, Object.assign(state.get(this), {
-                  data: defaults,
+                  data: nextData,
                   memoryPool: []
                 }));
 
-              case 4:
+              case 5:
               case "end":
                 return _context6.stop();
             }
@@ -395,7 +396,7 @@ var AsyncStorage = /*#__PURE__*/function () {
         }, _callee6, this);
       }));
 
-      function wipe() {
+      function wipe(_x6) {
         return _wipe.apply(this, arguments);
       }
 
