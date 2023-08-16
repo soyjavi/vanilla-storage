@@ -6,7 +6,14 @@ const state = new WeakMap();
 
 export class Storage {
   constructor(props = {}) {
-    const { adapter: Adapter = JsonAdapter, autoSave = true, defaults = {}, filename = 'store', secret } = props;
+    const {
+      adapter: Adapter = JsonAdapter,
+      autoSave = true,
+      defaults = {},
+      filename = 'store',
+      filemode = false,
+      secret,
+    } = props;
     const adapter = new Adapter({ defaults, filename });
 
     state.set(this, {
@@ -15,6 +22,7 @@ export class Storage {
       data: adapter.read(),
       defaults: cloneObject(defaults),
       filename,
+      filemode,
       key: 'default',
       memoryPool: [],
       secret,
@@ -130,7 +138,8 @@ export class Storage {
   }
 
   get value() {
-    const { data, key, filename, secret } = state.get(this);
+    const { adapter, data: stateData, filename, filemode, key, secret } = state.get(this);
+    const data = filemode ? adapter.read() : stateData;
 
     if (!secret) return data[key];
 

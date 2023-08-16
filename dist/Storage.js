@@ -50,6 +50,8 @@ var Storage = /*#__PURE__*/function () {
         defaults = _props$defaults === void 0 ? {} : _props$defaults,
         _props$filename = props.filename,
         filename = _props$filename === void 0 ? 'store' : _props$filename,
+        _props$filemode = props.filemode,
+        filemode = _props$filemode === void 0 ? false : _props$filemode,
         secret = props.secret;
     var adapter = new Adapter({
       defaults: defaults,
@@ -61,6 +63,7 @@ var Storage = /*#__PURE__*/function () {
       data: adapter.read(),
       defaults: (0, _modules.cloneObject)(defaults),
       filename: filename,
+      filemode: filemode,
       key: 'default',
       memoryPool: [],
       secret: secret
@@ -224,11 +227,14 @@ var Storage = /*#__PURE__*/function () {
     key: "value",
     get: function get() {
       var _state$get6 = state.get(this),
-          data = _state$get6.data,
-          key = _state$get6.key,
+          adapter = _state$get6.adapter,
+          stateData = _state$get6.data,
           filename = _state$get6.filename,
+          filemode = _state$get6.filemode,
+          key = _state$get6.key,
           secret = _state$get6.secret;
 
+      var data = filemode ? adapter.read() : stateData;
       if (!secret) return data[key];
       var decryptedValue;
 
